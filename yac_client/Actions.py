@@ -108,75 +108,12 @@ class Templates():
         self.requests.set_b000_to_0()
         self.requests.servo_on()
 
+    def refresh(self):
+        self.requests.set_b000_to_0()
+
     def draw_strokes(self, dir_name, speed=5000):
         self.requests.set_speed(speed, 100)
         self._run(dir_name)
-
-    def go_to_i01(self, index):
-        self._set_position(self.positions.i01, index)
-
-    def go_to_i00(self, index):
-        self._set_position(self.positions.i00, index)
-
-    def go_to_b00(self, index):
-        self._set_position(self.positions.b00, index)
-
-    def go_to_b01(self, index):
-        self._set_position(self.positions.b01, index)
-
-    def go_to_b10(self, index):
-        self._set_position(self.positions.b10, index)
-
-    def go_to_b11(self, index):
-        self._set_position(self.positions.b11, index)
-
-    def go_to_b20(self, index):
-        self._set_position(self.positions.b20, index)
-
-    def go_to_b21(self, index):
-        self._set_position(self.positions.b21, index)
-
-    def go_to_b30(self, index):
-        self._set_position(self.positions.b30, index)
-
-    def go_to_b31(self, index):
-        self._set_position(self.positions.b31, index)
-
-    def go_to_b40(self, index):
-        self._set_position(self.positions.b40, index)
-
-    def go_to_b41(self, index):
-        self._set_position(self.positions.b41, index)
-
-    def go_to_b50(self, index):
-        self._set_position(self.positions.b50, index)
-
-    def go_to_b51(self, index):
-        self._set_position(self.positions.b51, index)
-
-    def go_to_w00(self, index):
-        self._set_position(self.positions.w00, index)
-
-    def go_to_w01(self, index):
-        self._set_position(self.positions.w01, index)
-
-    def go_to_w02(self, index):
-        self._set_position(self.positions.w02, index)
-
-    def go_to_w03(self, index):
-        self._set_position(self.positions.w03, index)
-
-    def go_to_p00(self, index):
-        self._set_position(self.positions.p00, index)
-
-    def go_to_p01(self, index):
-        self._set_position(self.positions.p01, index)
-
-    def go_to_p02(self, index):
-        self._set_position(self.positions.p02, index)
-
-    def go_to_p03(self, index):
-        self._set_position(self.positions.p03, index)
 
     def go_to(self, index, position):
         self._set_position(position, index)

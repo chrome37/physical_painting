@@ -33,9 +33,9 @@ class ActionBundle:
     def get_brush(self, holder_index):
         position_brush_above = self.holder_index_map[holder_index][0]
         position_brush = self.holder_index_map[holder_index][1]
-        self.actions.init_YAC()
+        self.actions.refresh()
         job_len = self.actions.set_job_len(5)
-        self.actions.set_speed(self.actions.defined_speed["high"], job_len)
+        self.actions.set_speed(self.actions.defined_speed["default"], job_len)
         self.actions.go_to(0, self.positions.i00)
         self.actions.go_to(1, position_brush_above)
         self.actions.go_to(2, position_brush)
@@ -63,9 +63,9 @@ class ActionBundle:
         position_brush_above = self.holder_index_map[holder_index][0]
         position_brush = self.holder_index_map[holder_index][1]
 
-        self.actions.init_YAC()
+        self.actions.refresh()
         job_len = self.actions.set_job_len(3)
-        self.actions.set_speed(self.actions.defined_speed["high"], job_len)
+        self.actions.set_speed(self.actions.defined_speed["default"], job_len)
         self.actions.go_to(0, self.positions.i00)
         self.actions.go_to(1, position_brush_above)
         self.actions.go_to(2, position_brush)
@@ -75,9 +75,9 @@ class ActionBundle:
 
         self.arduino.tool(1000)
 
-        self.actions.init_YAC()
+        self.actions.refresh()
         job_len = self.actions.set_job_len(2)
-        self.actions.set_speed(self.actions.defined_speed["high"], job_len)
+        self.actions.set_speed(self.actions.defined_speed["default"], job_len)
         self.actions.go_to(0, position_brush_above)
         self.actions.go_to(1, self.positions.i00)
         self.actions.start_job()
@@ -134,12 +134,15 @@ if __name__ == "__main__":
     positions = Positions.DefinedPositions()
     actionBundle = ActionBundle(actions, arduino_client, positions)
 
+    actionBundle.initialize()
+
     actionBundle.get_brush(0)
     actionBundle.put_brush(0)
 
     actionBundle.get_brush(1)
     actionBundle.put_brush(1)
 
+    '''
     actionBundle.get_brush(2)
     actionBundle.put_brush(2)
 
@@ -151,5 +154,5 @@ if __name__ == "__main__":
 
     actionBundle.get_brush(5)
     actionBundle.put_brush(5)
-    #actionBundle.wash_brush(0, 1)
+    '''
 

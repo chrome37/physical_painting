@@ -170,7 +170,7 @@ class Templates():
         ### WAIT JOB COMPLETE START ###
         while True:
             print("wait for job completion")
-            for wait_time in range(10): # Delay for 10s
+            for wait_time in range(10): # Delay for 1s
                 print('.', end='', flush=True)
                 time.sleep(0.1)
             print()
