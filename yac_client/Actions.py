@@ -6,10 +6,9 @@ import binascii
 
 class Templates():
     def __init__(self, request_template):
-        self.client = client
         self.requests = request_template
         self.positions = Positions.DefinedPositions()
-        self.defined_speed = {"SLOW:": 500, "DEFAULT": 2500, "HIGH": 5000}
+        self.defined_speed = {"slow": 500, "default": 2500, "high": 5000}
 
     def _to_ascii(self, dec, n_byte):
         hex_str = self._to_hex_le(dec, n_byte)
@@ -208,6 +207,9 @@ class Templates():
             x = int(hex_le, 16)
             position.insert(0, np.int32(x))
         return Positions.PulseCoord(position[0], position[1], position[2], position[3], position[4], position[5], position[6])
+
+    def wait_job(self, job_len):
+        self.requests.wait_job_complete(job_len)
 
 
 if __name__ == "__main__":

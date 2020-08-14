@@ -45,6 +45,10 @@ class Client:
             command_string = f"COLOR N{str(i)} T{str(times[i]).zfill(4)}"
             self.__execute(command_string)
 
+    def wash_pallet(self, time):
+        command_string = f"COLOR N4 T{str(time)}"
+        self.__execute(command_string)
+
 
     def tool(self, time):
         command_string = f"TOOL T{str(time)}"
@@ -82,4 +86,4 @@ if __name__ == "__main__":
     ports = list(serial.tools.list_ports.comports())
     for p in ports:
         print(p)
-    client = Client("/dev/cu.usbserial-1460", 115200, 1)
+    #client = Client("/dev/cu.usbserial-1460", 115200, 1)

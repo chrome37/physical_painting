@@ -190,7 +190,7 @@ class Templates():
             data = ""   # no data for read
 
             # send data
-            recv_data = self._base_request(data_size, command, data_index, request_num, compute, data)
+            recv_data, addr = self._base_request(data_size, command, data_index, request_num, compute, data)
             result_flag = binascii.hexlify(recv_data)[-4:]
             #print('took ' + str(time.time() - start))
 
