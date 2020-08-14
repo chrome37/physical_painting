@@ -1,14 +1,15 @@
-import Requests
-import YAC_Client
-import Positions
+from . import Requests
+from . import YAC_Client
+from . import Positions
 import numpy as np
+import binascii
 
 class Templates():
-    DEFINED_SPEED = {"SLOW:": 500, "DEFAULT": 2500, "HIGH": 5000}
-    def __init__(self, client):
+    def __init__(self, request_template):
         self.client = client
-        self.requests = Requests.Templates(self.client)
+        self.requests = request_template
         self.positions = Positions.DefinedPositions()
+        self.defined_speed = {"SLOW:": 500, "DEFAULT": 2500, "HIGH": 5000}
 
     def _to_ascii(self, dec, n_byte):
         hex_str = self._to_hex_le(dec, n_byte)
@@ -53,7 +54,7 @@ class Templates():
         ### LOAD CSV FILE END ###
 
         df_len = len(df)
-        self.requests.set_b001(df_len, client)
+        self.requests.set_b001(df_len)
 
         ### SET P START ###
         # 1 loop is 1 line
@@ -79,7 +80,7 @@ class Templates():
 
         return True, df_len
 
-    def _set_position(self, position, index=0):
+    def _set_position(self, position, index):
         print(position.get_list())
         v = np.array(position.get_list()).astype(np.int64)
         self.requests.set_position(self._to_ascii(np.int64(index), 2),
@@ -104,129 +105,128 @@ class Templates():
             self.requests.start_job()
             self.requests.wait_job_complete(df_len)
 
-    def init_YAC(self, speed=DEFINED_SPEED["DEFAULT"], set_range=100):
+    def init_YAC(self):
         self.requests.set_b000_to_0()
         self.requests.servo_on()
-        #self.requests.set_speed(speed, set_range)
 
     def draw_strokes(self, dir_name, speed=5000):
         self.requests.set_speed(speed, 100)
         self._run(dir_name)
 
-    def go_to_i01(self, index=0, speed=DEFINED_SPEED["DEFAULT"]):
-        self.requests.set_speed(speed, 100)
-        self._set_position(self.positions.i01, index=index)
+    def go_to_i01(self, index):
+        self._set_position(self.positions.i01, index)
 
-    def go_to_i00(self, index=0, speed=DEFINED_SPEED["DEFAULT"]):
-        self.requests.set_speed(speed, 100)
-        self._set_position(self.positions.i00, index=index)
+    def go_to_i00(self, index):
+        self._set_position(self.positions.i00, index)
 
-    def go_to_b00(self, index=0, speed=DEFINED_SPEED["DEFAULT"]):
-        self.requests.set_speed(speed, 100)
-        self._set_position(self.positions.b00, index=index)
+    def go_to_b00(self, index):
+        self._set_position(self.positions.b00, index)
 
-    def go_to_b01(self, index=0, speed=DEFINED_SPEED["DEFAULT"]):
-        self.requests.set_speed(speed, 100)
-        self._set_position(self.positions.b01, index=index)
+    def go_to_b01(self, index):
+        self._set_position(self.positions.b01, index)
 
-    def go_to_b10(self, index=0, speed=DEFINED_SPEED["DEFAULT"]):
-        self.requests.set_speed(speed, 100)
-        self._set_position(self.positions.b10, index=index)
+    def go_to_b10(self, index):
+        self._set_position(self.positions.b10, index)
 
-    def go_to_b11(self, index=0, speed=DEFINED_SPEED["DEFAULT"]):
-        self.requests.set_speed(speed, 100)
-        self._set_position(self.positions.b11, index=index)
+    def go_to_b11(self, index):
+        self._set_position(self.positions.b11, index)
 
-    def go_to_b20(self, index=0, speed=DEFINED_SPEED["DEFAULT"]):
-        self.requests.set_speed(speed, 100)
-        self._set_position(self.positions.b20, index=index)
+    def go_to_b20(self, index):
+        self._set_position(self.positions.b20, index)
 
-    def go_to_b21(self, index=0, speed=DEFINED_SPEED["DEFAULT"]):
-        self.requests.set_speed(speed, 100)
-        self._set_position(self.positions.b21, index=index)
+    def go_to_b21(self, index):
+        self._set_position(self.positions.b21, index)
 
-    def go_to_b30(self, index=0, speed=DEFINED_SPEED["DEFAULT"]):
-        self.requests.set_speed(speed, 100)
-        self._set_position(self.positions.b30, index=index)
+    def go_to_b30(self, index):
+        self._set_position(self.positions.b30, index)
 
-    def go_to_b31(self, index=0, speed=DEFINED_SPEED["DEFAULT"]):
-        self.requests.set_speed(speed, 100)
-        self._set_position(self.positions.b31, index=index)
+    def go_to_b31(self, index):
+        self._set_position(self.positions.b31, index)
 
-    def go_to_b40(self, index=0, speed=DEFINED_SPEED["DEFAULT"]):
-        self.requests.set_speed(speed, 100)
-        self._set_position(self.positions.b40, index=index)
+    def go_to_b40(self, index):
+        self._set_position(self.positions.b40, index)
 
-    def go_to_b41(self, index=0, speed=DEFINED_SPEED["DEFAULT"]):
-        self.requests.set_speed(speed, 100)
-        self._set_position(self.positions.b41, index=index)
+    def go_to_b41(self, index):
+        self._set_position(self.positions.b41, index)
 
-    def go_to_b50(self, index=0, speed=DEFINED_SPEED["DEFAULT"]):
-        self.requests.set_speed(speed, 100)
-        self._set_position(self.positions.b50, index=index)
+    def go_to_b50(self, index):
+        self._set_position(self.positions.b50, index)
 
-    def go_to_b51(self, index=0, speed=DEFINED_SPEED["DEFAULT"]):
-        self.requests.set_speed(speed, 100)
-        self._set_position(self.positions.b51, index=index)
+    def go_to_b51(self, index):
+        self._set_position(self.positions.b51, index)
 
-    def go_to_w00(self, index=0, speed=DEFINED_SPEED["DEFAULT"]):
-        self.requests.set_speed(speed, 100)
-        self._set_position(self.positions.w00, index=index)
+    def go_to_w00(self, index):
+        self._set_position(self.positions.w00, index)
 
-    def go_to_w01(self, index=0, speed=DEFINED_SPEED["DEFAULT"]):
-        self.requests.set_speed(speed, 100)
-        self._set_position(self.positions.w01, index=index)
+    def go_to_w01(self, index):
+        self._set_position(self.positions.w01, index)
 
-    def go_to_w02(self, index=0, speed=DEFINED_SPEED["DEFAULT"]):
-        self.requests.set_speed(speed, 100)
-        self._set_position(self.positions.w02, index=index)
+    def go_to_w02(self, index):
+        self._set_position(self.positions.w02, index)
 
-    def go_to_w03(self, index=0, speed=DEFINED_SPEED["DEFAULT"]):
-        self.requests.set_speed(speed, 100)
-        self._set_position(self.positions.w03, index=index)
+    def go_to_w03(self, index):
+        self._set_position(self.positions.w03, index)
 
-    def go_to_p00(self, index=0, speed=DEFINED_SPEED["DEFAULT"]):
-        self.requests.set_speed(speed, 100)
-        self._set_position(self.positions.p00, index=index)
+    def go_to_p00(self, index):
+        self._set_position(self.positions.p00, index)
 
-    def go_to_p01(self, index=0, speed=DEFINED_SPEED["DEFAULT"]):
-        self.requests.set_speed(speed, 100)
-        self._set_position(self.positions.p01, index=index)
+    def go_to_p01(self, index):
+        self._set_position(self.positions.p01, index)
 
-    def go_to_p02(self, index=0, speed=DEFINED_SPEED["DEFAULT"]):
-        self.requests.set_speed(speed, 100)
-        self._set_position(self.positions.p02, index=index)
+    def go_to_p02(self, index):
+        self._set_position(self.positions.p02, index)
 
-    def go_to_p03(self, index=0, speed=DEFINED_SPEED["DEFAULT"]):
-        self.requests.set_speed(speed, 100)
-        self._set_position(self.positions.p03, index=index)
+    def go_to_p03(self, index):
+        self._set_position(self.positions.p03, index)
+
+    def go_to(self, index, position):
+        self._set_position(position, index)
 
     def start_job(self):
         self.requests.start_job()
 
     def set_job_len(self, n):
         self.requests.set_b001(n)
+        return n
 
-    '''
-    def go_to_b00(self, index=0, speed=self.defined_speed.high):
-        self.requests.set_speed(speed, 100)
-        self._set_position(self.positions.b00, index=index)
-        self.requests.start_job()
-    '''
+    def set_speed(self, speed, range):
+        self.requests.set_speed(speed, range)
+
+    def get_current_position(self):
+        recv, addr = self.requests.get_position()
+        answer = binascii.hexlify(recv).decode("utf-8")
+        position = []
+        for i in range(7):
+            hexstr = ""
+            if i == 0:
+                hexstr = answer[-8:]
+            else:
+                hexstr = answer[-8*(i+1):-8*i]
+            bytes_be = bytes.fromhex(hexstr)
+            bytes_le = bytes_be[::-1]
+            hex_le = bytes_le.hex()
+            x = int(hex_le, 16)
+            position.insert(0, np.int32(x))
+        return Positions.PulseCoord(position[0], position[1], position[2], position[3], position[4], position[5], position[6])
 
 
 if __name__ == "__main__":
     config = YAC_Client.Config(src_addr='10.0.0.10', src_port=10050, dest_addr='10.0.0.2', dest_port=10040)
     client = YAC_Client.Client(config)
-    actions = Templates(client)
+    requests = Requests.Templates(client)
+    actions = Templates(requests)
 
     # sequence
     actions.init_YAC()
-    actions.set_job_len(4)
-    #actions.go_to_i00(index=0, speed=500)
-    actions.go_to_p00(index=0, speed=500)
-    actions.go_to_p01(index=1, speed=500)
-    actions.go_to_p02(index=2, speed=500)
-    actions.go_to_p03(index=3, speed=500)
+    current = actions.get_current_position()
+    print(current.get_list())
+    '''
+    job_len = actions.set_job_len(4)
+    actions.set_speed(actions.defined_speed.HIGH, job_len)
+    actions.go_to_p00(0)
+    actions.go_to_p01(1)
+    actions.go_to_p02(2)
+    actions.go_to_p03(3)
     actions.start_job()
+    '''
 

@@ -1,4 +1,4 @@
-import YAC_Client
+from . import YAC_Client
 from argparse import ArgumentParser
 import pandas as pd
 import sys
@@ -9,6 +9,8 @@ import socket
 import re
 import time
 import csv
+import binascii
+
 
 class Templates():
 
@@ -87,7 +89,7 @@ class Templates():
         data_size = "<00><00>"
         command = "<7A><00>"    # byte type
         data_index = "<02><00>"    # B002
-        request_num = "<01>"    # fixed
+        request_num = "<00>"    # fixed
         compute = "<01>"    # read: Get_Attribute_All ：0x01
         payload = ""
 
@@ -153,6 +155,17 @@ class Templates():
 
         self._base_request(data_size, command, data_index, request_num, compute, data)
 
+    def get_position(self):
+        data_size = "<00><00>"
+        command = "<75><00>"
+        data_index = "<01><00>"
+        request_num = "<00>"
+        compute = "<01>"
+        payload = ""
+
+        recv, addr = self._base_request(data_size, command, data_index, request_num, compute, payload)
+        return recv, addr
+
     def wait_job_complete(self, df_len):
         ### WAIT JOB COMPLETE START ###
         while True:
@@ -192,7 +205,21 @@ class Templates():
 
 
 if __name__ == "__main__":
-    config = YAC_Client.Config(src_addr='10.0.0.1', src_port=10050, dest_addr='10.0.0.2', dest_port=10040)
+    config = YAC_Client.Config(src_addr='10.0.0.10', src_port=10050, dest_addr='10.0.0.2', dest_port=10040)
     client = YAC_Client.Client(config)
     templates = Templates(client)
     templates.servo_on()
+    recv, addr = templates.get_position()
+    answer = binascii.hexlify(recv).decode("utf-8")
+
+    for i in range(7):
+        hexstr = ""
+        if i == 0:
+            hexstr = answer[-8:]
+        else:
+            hexstr = answer[-8*(i+1):-8*i]
+        bytes_be = bytes.fromhex(hexstr)
+        bytes_le = bytes_be[::-1]
+        hex_le = bytes_le.hex()
+        x = int(hex_le, 16)
+        print(np.int32(x))

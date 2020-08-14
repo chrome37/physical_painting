@@ -83,10 +83,3 @@ if __name__ == "__main__":
     for p in ports:
         print(p)
     client = Client("/dev/cu.usbserial-1460", 115200, 1)
-
-    client.pallet_feed()
-    time.sleep(3)
-    client.pallet_dispose()
-    time.sleep(3)
-    client.pallet_receive()
-
