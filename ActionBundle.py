@@ -9,6 +9,16 @@ class ActionBundle:
         self.actions = actions_template
         self.arduino = arduino_client
         self.positions = positions
+        self.holder_index_map = [
+            [self.positions.b00, self.positions.b01],
+            [self.positions.b10, self.positions.b11],
+            [self.positions.b20, self.positions.b21],
+            [self.positions.b30, self.positions.b31],
+            [self.positions.b40, self.positions.b41],
+            [self.positions.b50, self.positions.b51],
+            [self.positions.w00, self.positions.w01],
+            [self.positions.w02, self.positions.w03],
+        ]
 
     def initialize(self):
         self.actions.init_YAC()
@@ -20,89 +30,71 @@ class ActionBundle:
             current_position_coords = self.actions.get_current_position().get_list()
             time.sleep(0.1)
 
-    def __get_brush(self, position_brush_above, position_brush):
+    def get_brush(self, holder_index):
+        position_brush_above = self.holder_index_map[holder_index][0]
+        position_brush = self.holder_index_map[holder_index][1]
         self.actions.init_YAC()
-        job_len = self.actions.set_job_len(6)
-        self.actions.set_speed(self.actions.defined_speed["default"], job_len)
+        job_len = self.actions.set_job_len(5)
+        self.actions.set_speed(self.actions.defined_speed["high"], job_len)
         self.actions.go_to(0, self.positions.i00)
         self.actions.go_to(1, position_brush_above)
         self.actions.go_to(2, position_brush)
         self.actions.go_to(3, position_brush_above)
         self.actions.go_to(4, self.positions.i00)
-        self.actions.go_to(5, self.positions.i01)
         self.actions.start_job()
         self.actions.wait_job(job_len)
 
-
-
-    def __put_brush(self, position_brush_above, position_brush):
+    def get_brush_from_washer(self):
         self.actions.init_YAC()
-        job_len = self.actions.set_job_len(4)
+        job_len = self.actions.set_job_len(8)
         self.actions.set_speed(self.actions.defined_speed["default"], job_len)
-        self.actions.go_to(0, self.positions.i01)
-        self.actions.go_to(1, self.positions.i00)
-        self.actions.go_to(2, position_brush_above)
-        self.actions.go_to(3, position_brush)
+        self.actions.go_to(0, self.positions.i00)
+        self.actions.go_to(1, self.positions.w00)
+        self.actions.go_to(2, self.positions.w01)
+        self.actions.go_to(3, self.positions.w00)
+        self.actions.go_to(4, self.positions.w02)
+        self.actions.go_to(5, self.positions.w03)
+        self.actions.go_to(6, self.positions.w02)
+        self.actions.go_to(7, self.positions.i00)
+        self.actions.start_job()
+        self.actions.wait_job(job_len)
+
+    def put_brush(self, holder_index):
+        position_brush_above = self.holder_index_map[holder_index][0]
+        position_brush = self.holder_index_map[holder_index][1]
+
+        self.actions.init_YAC()
+        job_len = self.actions.set_job_len(3)
+        self.actions.set_speed(self.actions.defined_speed["high"], job_len)
+        self.actions.go_to(0, self.positions.i00)
+        self.actions.go_to(1, position_brush_above)
+        self.actions.go_to(2, position_brush)
         self.actions.start_job()
 
         self.__wait_moving(position_brush)
 
-        self.arduino.tool(3000)
+        self.arduino.tool(1000)
 
         self.actions.init_YAC()
-        job_len = self.actions.set_job_len(1)
-        self.actions.set_speed(self.actions.defined_speed["default"], job_len)
+        job_len = self.actions.set_job_len(2)
+        self.actions.set_speed(self.actions.defined_speed["high"], job_len)
         self.actions.go_to(0, position_brush_above)
+        self.actions.go_to(1, self.positions.i00)
         self.actions.start_job()
         self.actions.wait_job(job_len)
-
-    def get_brush_0(self):
-        self.__get_brush(self.positions.b00, self.positions.b01)
-
-    def get_brush_1(self):
-        self.__get_brush(self.positions.b10, self.positions.b11)
-
-    def get_brush_2(self):
-        self.__get_brush(self.positions.b20, self.positions.b21)
-
-    def get_brush_3(self):
-        self.__get_brush(self.positions.b30, self.positions.b31)
-
-    def get_brush_4(self):
-        self.__get_brush(self.positions.b40, self.positions.b41)
-
-    def get_brush_5(self):
-        self.__get_brush(self.positions.b50, self.positions.b51)
-
-
-    def put_brush_0(self):
-        self.__put_brush(self.positions.b00, self.positions.b01)
-
-    def put_brush_1(self):
-        self.__put_brush(self.positions.b10, self.positions.b11)
-
-    def put_brush_2(self):
-        self.__put_brush(self.positions.b20, self.positions.b21)
-
-    def put_brush_3(self):
-        self.__put_brush(self.positions.b30, self.positions.b31)
-
-    def put_brush_4(self):
-        self.__put_brush(self.positions.b40, self.positions.b41)
-
-    def put_brush_5(self):
-        self.__put_brush(self.positions.b50, self.positions.b51)
-
 
     def get_color(self):
         self.arduino.pallet_feed()
         self.actions.init_YAC()
-        job_len = self.actions.set_job_len(4)
-        self.set_speed(self.actions.defined_speed["default"], job_len)
-        self.actions.go_to(0, self.positions.p00)
-        self.actions.go_to(1, self.positions.p01)
-        self.actions.go_to(2, self.positions.p02)
-        self.actions.go_to(3, self.positions.p03)
+        job_len = self.actions.set_job_len(7)
+        self.actions.set_speed(self.actions.defined_speed["default"], job_len)
+        self.actions.go_to(0, self.positions.i01)
+        self.actions.go_to(1, self.positions.p00)
+        self.actions.go_to(2, self.positions.p01)
+        self.actions.go_to(3, self.positions.p02)
+        self.actions.go_to(4, self.positions.p03)
+        self.actions.go_to(5, self.positions.p00)
+        self.actions.go_to(6, self.positions.i01)
         self.actions.start_job()
         self.wait_job(job_len)
 
@@ -120,6 +112,15 @@ class ActionBundle:
         self.arduino.pallet_receive()
         time.sleep(3)
         self.arduino.color_mix(r, g, b)
+        time.sleep(3)
+
+    def wash_brush(self, current_brush_index, previous_brush_index):
+        self.put_brush(current_brush_index)
+        self.get_brush_from_washer()
+        self.put_brush(previous_brush_index)
+        self.get_brush(current_brush_index)
+        self.put_brush(6)
+
 
 if __name__ == "__main__":
     config = YAC_Client.Config(src_addr='10.0.0.10', src_port=10050, dest_addr='10.0.0.2', dest_port=10040)
@@ -133,20 +134,22 @@ if __name__ == "__main__":
     positions = Positions.DefinedPositions()
     actionBundle = ActionBundle(actions, arduino_client, positions)
 
-    actionBundle.get_brush_0()
-    actionBundle.put_brush_0()
+    actionBundle.get_brush(0)
+    actionBundle.put_brush(0)
 
-    actionBundle.get_brush_1()
-    actionBundle.put_brush_1()
+    actionBundle.get_brush(1)
+    actionBundle.put_brush(1)
 
-    actionBundle.get_brush_2()
-    actionBundle.put_brush_2()
+    actionBundle.get_brush(2)
+    actionBundle.put_brush(2)
 
-    actionBundle.get_brush_3()
-    actionBundle.put_brush_3()
+    actionBundle.get_brush(3)
+    actionBundle.put_brush(3)
 
-    actionBundle.get_brush_4()
-    actionBundle.put_brush_4()
+    actionBundle.get_brush(4)
+    actionBundle.put_brush(4)
 
-    actionBundle.get_brush_5()
-    actionBundle.put_brush_5()
+    actionBundle.get_brush(5)
+    actionBundle.put_brush(5)
+    #actionBundle.wash_brush(0, 1)
+
