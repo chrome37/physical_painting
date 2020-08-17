@@ -1,13 +1,13 @@
-from . import Requests
-from . import YAC_Client
-from . import Positions
+from . import requests
+from . import client
+from . import positions
+from . import stroke
 import numpy as np
 import binascii
 
 class Templates():
     def __init__(self, request_template):
         self.requests = request_template
-        self.positions = Positions.DefinedPositions()
         self.defined_speed = {"slow": 500, "default": 2500, "high": 5000}
 
     def _to_ascii(self, dec, n_byte):
@@ -115,6 +115,11 @@ class Templates():
         self.requests.set_speed(speed, 100)
         self._run(dir_name)
 
+    def draw_stroke(self, stroke, speed):
+        self.request.set_speed(speed, 100)
+        for point in stroke.points:
+            print(point.get_list())
+
     def go_to(self, index, position):
         self._set_position(position, index)
 
@@ -150,10 +155,10 @@ class Templates():
 
 
 if __name__ == "__main__":
-    config = YAC_Client.Config(src_addr='10.0.0.10', src_port=10050, dest_addr='10.0.0.2', dest_port=10040)
-    client = YAC_Client.Client(config)
-    requests = Requests.Templates(client)
-    actions = Templates(requests)
+    config = client.Config(src_addr='10.0.0.10', src_port=10050, dest_addr='10.0.0.2', dest_port=10040)
+    yac_client = client.Client(config)
+    requests_template = requests.Templates(yac_client)
+    actions = Templates(requests_template)
 
     # sequence
     actions.init_YAC()

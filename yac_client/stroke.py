@@ -1,0 +1,89 @@
+import numpy as np
+import os
+from natsort import natsorted
+from . import positions
+
+
+class Stroke:
+    def __init__(self, x0, y0, x1, y1, x2, y2, z0, z2, r, g, b, thickness):
+        config = CoordConfig()
+        self.color = StrokeColor(r, g, b)
+        point_num = 50
+        t_array = np.arange(0, 1, 1/point_num)
+        points_disp = []
+        for t in t_array:
+            points_disp.append(self.__bezier(
+                x0, y0, x1, y1, x2, y2, z0, z2, t))
+
+        points_world = [self.__convert(
+            i[0]*255, i[1]*255, i[2], config) for i in points_disp]
+
+        self.points = [positions.RobotCoord(i[0], i[1], i[2], config.ROBOT_TIP_ROTATION[0],
+                                            config.ROBOT_TIP_ROTATION[1], config.ROBOT_TIP_ROTATION[2], 0) for i in points_world]
+
+    def __bezier(self, x0, y0, x1, y1, x2, y2, z0, z2, t):
+        x = ((1-t) * (1-t) * x0 + 2 * t * (1-t) * x1 + t * t * x2)
+        y = ((1-t) * (1-t) * y0 + 2 * t * (1-t) * y1 + t * t * y2)
+        z = ((1-t) * z0 + t * z2)
+        return x, y, z, 0
+
+    def __convert(self, x, y, z, config, img_x=200, img_y=200, canvas_x=150, canvas_y=150):
+        R = np.array([
+            [np.cos(config.EASEL_ANG), 0, -np.sin(config.EASEL_ANG)],
+            [0, 1, 0],
+            [np.sin(config.EASEL_ANG), 0, np.cos(config.EASEL_ANG)]])
+
+        x_new = x/img_x*canvas_x - canvas_x/2
+        y_new = canvas_y - (y/img_y*canvas_y) + config.CANVAS_MERGIN_BUTTON
+        c = [0, x_new, y_new]
+
+        #  押し付け量の考慮
+        #EASEL_CANPAS_OFFSET[0] += z
+
+        return [int(i*1000) for i in config.EASEL_BASE_OFFSET + np.dot(config.EASEL_CANPAS_OFFSET, R) + np.dot(c, R)]
+
+
+class StrokeColor:
+    def __init__(self, r, g, b):
+        self.r = r
+        self.g = g
+        self.b = b
+
+
+class CoordConfig:
+    def __init__(self):
+        # the angle of painter easel
+        # -15 degree
+        self.EASEL_ANG = -np.pi / 12
+
+        # mm
+        #EASEL_LENGTH = 1000
+        self.EASEL_LENGTH = 820
+
+        # mm
+        self.EASEL_THICKNESS = 11
+
+        self.CANVAS_MERGIN_BUTTON = 50
+
+        # mm
+        #ROBOT_TIP_TO_PEN_TIP = 76
+        # ROBOT_TIP_TO_PEN_TIP = 130 (実測値は105だったが130でうまく動いている、キャンバスの厚さもこの定数に含まれている？)
+        self.ROBOT_TIP_TO_PEN_TIP = 105
+
+        # mm
+        # キャンバス厚さ
+        self.CANVAS_THICKNESS = 25
+
+        self.ROBOT_TIP_ROTATION = [-1050000, 0, 0]
+        #ROBOT_TIP_ROTATION = [-1050000, 0, 0]
+
+        self.EASEL_BASE_OFFSET = np.array([-398, 0, -(360+510)])
+        self.EASEL_CANPAS_OFFSET = np.array(
+            [self.EASEL_THICKNESS + self.ROBOT_TIP_TO_PEN_TIP + self.CANVAS_THICKNESS, 0, self.EASEL_LENGTH])
+
+
+if __name__ == "__main__":
+    stroke = Stroke(0.13449928, 0.47401235, 0.98125505, 0.8168494,
+                    0.15215716, 0.45815855, 1.0, 1.0, 0.8443417, 0.8312879, 0.7027973, 0.40457433)
+    for i in stroke.points:
+        print(i.get_list())

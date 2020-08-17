@@ -1,4 +1,4 @@
-from . import YAC_Client
+from . import client
 from argparse import ArgumentParser
 import pandas as pd
 import sys

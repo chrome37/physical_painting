@@ -1,8 +1,9 @@
-import yac_client.YAC_Client as YAC_Client
-import yac_client.Requests as Requests
-import yac_client.Actions as Actions
+import yac_client.client as YAC_client
+import yac_client.requests as requests
+import yac_client.actions as actions
+import yac_client.stroke as stroke
 import arduino.client as arduino_client
-import yac_client.Positions as Positions
+import yac_client.positions as positions
 import time
 class ActionBundle:
     def __init__(self, actions_template, arduino_client, positions):
@@ -123,36 +124,18 @@ class ActionBundle:
 
 
 if __name__ == "__main__":
-    config = YAC_Client.Config(src_addr='10.0.0.10', src_port=10050, dest_addr='10.0.0.2', dest_port=10040)
-    client = YAC_Client.Client(config)
-    requests = Requests.Templates(client)
-    actions = Actions.Templates(requests)
+    config = YAC_client.Config(src_addr='10.0.0.10', src_port=10050, dest_addr='10.0.0.2', dest_port=10040)
+    client = YAC_client.Client(config)
+    requests = requests.Templates(client)
+    actions = actions.Templates(requests)
 
 
     arduino_client = arduino_client.Client("/dev/cu.usbserial-1460", 115200, 1)
 
-    positions = Positions.DefinedPositions()
+    positions = positions.DefinedPositions()
     actionBundle = ActionBundle(actions, arduino_client, positions)
 
     actionBundle.initialize()
 
-    actionBundle.get_brush(0)
-    actionBundle.put_brush(0)
-
-    actionBundle.get_brush(1)
-    actionBundle.put_brush(1)
-
-    '''
-    actionBundle.get_brush(2)
-    actionBundle.put_brush(2)
-
-    actionBundle.get_brush(3)
-    actionBundle.put_brush(3)
-
-    actionBundle.get_brush(4)
-    actionBundle.put_brush(4)
-
-    actionBundle.get_brush(5)
-    actionBundle.put_brush(5)
-    '''
-
+    stroke = Stroke(0.13449928, 0.47401235, 0.98125505, 0.8168494,
+                    0.15215716, 0.45815855, 1.0, 1.0, 0.8443417, 0.8312879, 0.7027973, 0.40457433)
