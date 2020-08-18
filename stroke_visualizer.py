@@ -19,10 +19,12 @@ def draw_world(strokes):
         x = [i[0] for i in stroke.get_points_world()]
         y = [i[1] for i in stroke.get_points_world()]
         z = [i[2] for i in stroke.get_points_world()]
-        ax.plot(x, y, z, linewidth=4, color="black")
+
+        color = stroke.get_color()
+        ax.plot(x, y, z, linewidth=4, color=[color.r, color.g, color.b])
 
     plt.show()
 
 if __name__ == "__main__":
     strokes = stroke_loader.load("./stroke_test/atom/stcoke.csv")
-    draw_disp(strokes)
+    draw_world(strokes)
