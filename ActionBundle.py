@@ -122,6 +122,18 @@ class ActionBundle:
         self.get_brush(current_brush_index)
         self.put_brush(6)
 
+    def draw_strokes(self, strokes):
+        for stroke in strokes:
+            points_num = len(stroke.get_points())
+            self.actions.init_YAC()
+            job_len = self.actions.set_job_len(points_num + 2)
+            self.set_speed(self.actions.set_speed["default"], job_len)
+            self.actions.go_to(self.positions.i01, 0)
+            self.actions.draw_stroke(stroke, 1)
+            self.actions.go_to(self.positions.i01, points_num + 1)
+            self.actions.start_job()
+            self.actions.wait_job(job_len)
+
 
 if __name__ == "__main__":
     config = YAC_client.Config(src_addr='10.0.0.10', src_port=10050, dest_addr='10.0.0.2', dest_port=10040)

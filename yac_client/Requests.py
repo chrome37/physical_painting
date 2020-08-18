@@ -14,11 +14,11 @@ import binascii
 
 class Templates():
 
-    def __init__(self, client):
-        self._client = client
+    def __init__(self, yac_client):
+        self._client = yac_client
 
     def _base_request(self, data_size, command, data_index, request_num, compute, payload):
-        request = YAC_Client.Request()
+        request = client.Request()
         request.set_header(data_size=data_size)
         request.set_subheader(command, data_index, request_num, compute)
         request.set_payload(payload)
@@ -205,8 +205,8 @@ class Templates():
 
 
 if __name__ == "__main__":
-    config = YAC_Client.Config(src_addr='10.0.0.10', src_port=10050, dest_addr='10.0.0.2', dest_port=10040)
-    client = YAC_Client.Client(config)
+    config = client.Config(src_addr='10.0.0.10', src_port=10050, dest_addr='10.0.0.2', dest_port=10040)
+    yac_client = client.Client(config)
     templates = Templates(client)
     templates.servo_on()
     recv, addr = templates.get_position()

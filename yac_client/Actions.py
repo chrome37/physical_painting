@@ -115,10 +115,10 @@ class Templates():
         self.requests.set_speed(speed, 100)
         self._run(dir_name)
 
-    def draw_stroke(self, stroke, speed):
-        self.request.set_speed(speed, 100)
-        for point in stroke.points:
-            print(point.get_list())
+    def draw_stroke(self, stroke, start_index):
+        points = stroke.get_points()
+        for i in range(len(points)):
+            self._set_position(points[i], start_index + i)
 
     def go_to(self, index, position):
         self._set_position(position, index)
