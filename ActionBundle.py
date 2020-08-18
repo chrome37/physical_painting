@@ -5,6 +5,7 @@ import yac_client.stroke as stroke
 import arduino.client as arduino_client
 import yac_client.positions as positions
 import time
+import utils.stroke_loader as stroke_loader
 class ActionBundle:
     def __init__(self, actions_template, arduino_client, positions):
         self.actions = actions_template
@@ -149,5 +150,6 @@ if __name__ == "__main__":
 
     actionBundle.initialize()
 
-    stroke = Stroke(0.13449928, 0.47401235, 0.98125505, 0.8168494,
-                    0.15215716, 0.45815855, 1.0, 1.0, 0.8443417, 0.8312879, 0.7027973, 0.40457433)
+    strokes = stroke_loader.load("./stroke_test/atom/stcoke.csv")
+    actionBundle.draw_strokes(strokes[0:5])
+
