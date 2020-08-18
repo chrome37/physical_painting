@@ -145,8 +145,8 @@ if __name__ == "__main__":
 
     arduino_client = arduino_client.Client("/dev/cu.usbserial-1460", 115200, 1)
 
-    positions = positions.DefinedPositions()
-    actionBundle = ActionBundle(actions, arduino_client, positions)
+    defined_positions = positions.DefinedPositions()
+    actionBundle = ActionBundle(actions, arduino_client, defined_positions)
 
     actionBundle.initialize()
 

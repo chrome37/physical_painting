@@ -2,6 +2,7 @@ import utils.stroke_loader as stroke_loader
 import matplotlib.pyplot as plt
 import csv
 from mpl_toolkits.mplot3d import Axes3D
+import sys
 
 def draw_disp(strokes):
     for stroke in strokes:
@@ -26,5 +27,10 @@ def draw_world(strokes):
     plt.show()
 
 if __name__ == "__main__":
-    strokes = stroke_loader.load("./stroke_test/atom/stcoke.csv")
-    draw_world(strokes)
+    args = sys.argv
+    strokes = stroke_loader.load(args[1])
+
+    if args[2] == "--disp":
+        draw_disp(strokes)
+    elif args[2] == "--world":
+        draw_world(strokes)
