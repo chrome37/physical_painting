@@ -14,10 +14,9 @@ class Stroke:
         for t in t_array:
             points_disp.append(self.__bezier(
                 x0, y0, x1, y1, x2, y2, z0, z2, t))
-
+        self.points_disp = points_disp
         points_world = [self.__convert(
             i[0]*255, i[1]*255, i[2], config) for i in points_disp]
-
         self.points = [positions.RobotCoord(i[0], i[1], i[2], config.ROBOT_TIP_ROTATION[0],
                                             config.ROBOT_TIP_ROTATION[1], config.ROBOT_TIP_ROTATION[2], 0) for i in points_world]
 
@@ -44,6 +43,9 @@ class Stroke:
 
     def get_points(self):
         return self.points
+
+    def get_points_disp(self):
+        return self.points_disp
 
 
 class StrokeColor:
