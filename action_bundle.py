@@ -162,11 +162,6 @@ if __name__ == "__main__":
     strokes = stroke_loader.load("./stroke_test/atom/stcoke.csv")
     actionBundle.initialize()
 
-    '''
-    for point in strokes[0].get_points():
-        print(point.get_list())
-    '''
-
     current_brush_index = 0
     prev_brush_index = 0
     for i in range(1):

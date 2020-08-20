@@ -30,9 +30,6 @@ if __name__ == "__main__":
     args = sys.argv
     strokes = stroke_loader.load(args[1])[0:5]
 
-    for point in strokes[1].get_points():
-        print(point.get_list())
-
     if args[2] == "--disp":
         draw_disp(strokes)
     elif args[2] == "--world":

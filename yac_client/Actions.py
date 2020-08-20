@@ -30,7 +30,7 @@ class Templates():
             return 'error'
 
     def _set_position(self, position, index):
-        print(position.get_list())
+        print(f"set position: {position.get_list()}")
         v = np.array(position.get_list()).astype(np.int64)
         self.requests.set_position(self._to_ascii(np.int64(index), 2),
                 self._to_ascii(v[0], 4), self._to_ascii(v[1], 4),
@@ -50,6 +50,7 @@ class Templates():
     def draw_stroke(self, start_index, stroke):
         points = stroke.get_points()
         for i in range(len(points)):
+            print(f"drawing stroke index: {i}")
             self._set_position(points[i], start_index + i)
 
     def go_to(self, index, position):

@@ -110,11 +110,11 @@ class Client():
 
     def execute(self, request: Request):
         self._client.sendto(request.get_request(), (self._config.get_dest_addr(), self._config.get_dest_port()))
-        print("sent>> ", binascii.hexlify(request.get_request()))
+        #print("sent>> ", binascii.hexlify(request.get_request()))
 
     def get_answer(self, buf_size: int = 4096):
         recv_data, addr = self._client.recvfrom(buf_size)
-        print("recv<< ", binascii.hexlify(recv_data))
+        #print("recv<< ", binascii.hexlify(recv_data))
         return recv_data, addr
 
     def close(self):
