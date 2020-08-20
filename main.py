@@ -7,15 +7,15 @@ import yac_client.positions as positions
 import action_bundle
 import brush
 import utils.stroke_loader as stroke_loader
+import config
 
 def make_action_bundle():
-    config = YAC_client.Config(src_addr='10.0.0.10', src_port=10050, dest_addr='10.0.0.2', dest_port=10040)
-    client = YAC_client.Client(config)
+    client_config = YAC_client.Config(src_addr=config.src_addr, src_port=config.src_port, dest_addr=config.dest_addr, dest_port=config.dest_port)
+    client = YAC_client.Client(client_config)
     requests = requests.Templates(client)
     actions = actions.Templates(requests)
 
-
-    arduino_client = arduino_client.Client("/dev/cu.usbserial-1440", 115200, 1)
+    arduino_client = arduino_client.Client(config.serial_port, config.baudrate, 1)
 
     defined_positions = positions.DefinedPositions()
 
@@ -41,22 +41,20 @@ def brush_select(prev_brush, target_strokes):
     return current_brush
 
 if __name__ == "__main__":
-
     action_bundle = make_action_bundle()
-    strokes = stroke_loader.load("./stroke_test/atom/stcoke.csv")
+    strokes = stroke_loader.load(config.stroke_file_path)
 
-    stroke_per_loop = 5
+    stroke_per_loop = config.stroke_per_loop
     loop_num = len(stroke) / stroke_per_loop
     target_strokes = strokes[0:stroke_per_loop]
 
-    initial_brush = brush.brush_set[0]
-    current_brush = initial_brush
+    current_brush = brush_select(brush.brush_set[0], target_strokes)
     prev_brush = None
 
     for i in range(loop_num):
         if i == 0:
             action_bundle.initialize()
-            action_bundle.get_brush(initial_brush.index)
+            action_bundle.get_brush(current_brush.index)
             action_bundle.get_color()
             action_bundle.draw_strokes(strokes[target_strokes])
             action_bundle.put_brush(6)

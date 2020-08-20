@@ -8,6 +8,7 @@ import time
 import utils.stroke_loader as stroke_loader
 class ActionBundle:
     def __init__(self, actions_template, arduino_client, positions):
+        self.config = ActionBundleConfig()
         self.actions = actions_template
         self.arduino = arduino_client
         self.positions = positions
@@ -30,14 +31,14 @@ class ActionBundle:
         current_position_coords = []
         while target_position_coords != current_position_coords:
             current_position_coords = self.actions.get_current_position().get_list()
-            time.sleep(0.1)
+            time.sleep(self.config.check_position_interval)
 
     def get_brush(self, holder_index):
         position_brush_above = self.holder_index_map[holder_index][0]
         position_brush = self.holder_index_map[holder_index][1]
         self.actions.refresh()
         job_len = self.actions.set_job_len(5)
-        self.actions.set_speed(self.actions.defined_speed["default"], job_len)
+        self.actions.set_speed(self.config.get_brush_speed, job_len)
         self.actions.go_to(0, self.positions.i00)
         self.actions.go_to(1, position_brush_above)
         self.actions.go_to(2, position_brush)
@@ -49,7 +50,7 @@ class ActionBundle:
     def get_brush_from_washer(self):
         self.actions.init_YAC()
         job_len = self.actions.set_job_len(8)
-        self.actions.set_speed(self.actions.defined_speed["default"], job_len)
+        self.actions.set_speed(self.config.get_brush_speed, job_len)
         self.actions.go_to(0, self.positions.i00)
         self.actions.go_to(1, self.positions.w00)
         self.actions.go_to(2, self.positions.w01)
@@ -67,7 +68,7 @@ class ActionBundle:
 
         self.actions.refresh()
         job_len = self.actions.set_job_len(3)
-        self.actions.set_speed(self.actions.defined_speed["default"], job_len)
+        self.actions.set_speed(self.config.put_brush_speed, job_len)
         self.actions.go_to(0, self.positions.i00)
         self.actions.go_to(1, position_brush_above)
         self.actions.go_to(2, position_brush)
@@ -75,11 +76,11 @@ class ActionBundle:
 
         self.__wait_moving(position_brush)
 
-        self.arduino.tool(1000)
+        self.arduino.tool(self.config.tool_detach_time)
 
         self.actions.refresh()
         job_len = self.actions.set_job_len(2)
-        self.actions.set_speed(self.actions.defined_speed["default"], job_len)
+        self.actions.set_speed(self.config.put_brush_speed, job_len)
         self.actions.go_to(0, position_brush_above)
         self.actions.go_to(1, self.positions.i00)
         self.actions.start_job()
@@ -89,7 +90,7 @@ class ActionBundle:
         self.arduino.pallet_feed()
         self.actions.init_YAC()
         job_len = self.actions.set_job_len(7)
-        self.actions.set_speed(self.actions.defined_speed["default"], job_len)
+        self.actions.set_speed(self.config.get_color_speed, job_len)
         self.actions.go_to(0, self.positions.i01)
         self.actions.go_to(1, self.positions.p00)
         self.actions.go_to(2, self.positions.p01)
@@ -102,19 +103,19 @@ class ActionBundle:
 
     def pallet_clear(self):
         self.arduino.pallet_dispose()
-        time.sleep(3)
+        time.sleep(self.config.pallet_move_wait_time)
         self.arduino.pallet_receive()
-        time.sleep(3)
-        self.arduino.wash_pallet(2000)
+        time.sleep(self.config.pallet_move_wait_time)
+        self.arduino.wash_pallet(self.config.wash_pallet_time)
         self.arduino.pallet_dispose()
-        time.sleep(3)
+        time.sleep(self.config.pallet_move_wait_time)
         self.arduino.pallet_receive()
 
     def make_color(self, r, g, b):
         self.arduino.pallet_receive()
-        time.sleep(3)
+        time.sleep(self.config.pallet_move_wait_time)
         self.arduino.color_mix(r, g, b)
-        time.sleep(3)
+        time.sleep(self.config.pallet_move_wait_time)
 
     def wash_brush(self, current_brush_index, previous_brush_index):
         self.put_brush(current_brush_index)
@@ -128,16 +129,27 @@ class ActionBundle:
             points_num = len(stroke.get_points())
             self.actions.init_YAC()
             job_len = self.actions.set_job_len(points_num + 2)
-            self.actions.set_speed(self.actions.defined_speed["high"], job_len)
+            self.actions.set_speed(self.config.draw_strokes_speed, job_len)
             self.actions.go_to(0, self.positions.i01)
             self.actions.draw_stroke(1, stroke)
             self.actions.go_to(points_num + 1, self.positions.i01)
             self.actions.start_job()
             self.actions.wait_job(job_len)
 
+class ActionBundleConfig:
+    def __init__(self):
+        self.check_position_interval = 0.1
+        self.get_brush_speed = 2500
+        self.put_brush_speed = 2500
+        self.draw_strokes_speed = 5000
+        self.get_color_speed = 2500
+        self.tool_detach_time = 1000
+        self.wash_pallet_time = 2000
+        self.pallet_move_wait_time = 3
+
 
 if __name__ == "__main__":
-    config = YAC_client.Config(src_addr='10.0.0.10', src_port=10050, dest_addr='10.0.0.2', dest_port=10040)
+    config = YAC_client.Config(src_addr='localhost', src_port=10050, dest_addr='localhost', dest_port=10040)
     client = YAC_client.Client(config)
     requests = requests.Templates(client)
     actions = actions.Templates(requests)
