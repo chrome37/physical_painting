@@ -1,7 +1,8 @@
 class DefinedPositions:
     def __init__(self):
         self.i00 = PulseCoord(-67000, -20000, 124000, 0, 60000, -15000, 0)
-        self.i01 = PulseCoord(0, -8000, 145000, 0, -38000, 0, 0)
+        #self.i01 = PulseCoord(0, -8000, 145000, 0, -38000, 0, 0)
+        self.i01 = PulseCoord(0, -8000, 145000, 0, -38000, 52212, 0)
         self.i02 = PulseCoord(40000, -20000, 124000, 0, 60000, -15000, 0)
         self.b00 = PulseCoord(-46678, -21373, 121754, 166, 60711, -26186, 0)
         self.b01 = PulseCoord(-46678, -45910, 124470, 295, 30466, -26268, 0)

@@ -98,7 +98,7 @@ class ActionBundle:
         self.actions.go_to(5, self.positions.p00)
         self.actions.go_to(6, self.positions.i01)
         self.actions.start_job()
-        self.wait_job(job_len)
+        self.actions.wait_job(job_len)
 
     def pallet_clear(self):
         self.arduino.pallet_dispose()
@@ -128,10 +128,10 @@ class ActionBundle:
             points_num = len(stroke.get_points())
             self.actions.init_YAC()
             job_len = self.actions.set_job_len(points_num + 2)
-            self.set_speed(self.actions.set_speed["default"], job_len)
-            self.actions.go_to(self.positions.i01, 0)
-            self.actions.draw_stroke(stroke, 1)
-            self.actions.go_to(self.positions.i01, points_num + 1)
+            self.actions.set_speed(self.actions.defined_speed["high"], job_len)
+            self.actions.go_to(0, self.positions.i01)
+            self.actions.draw_stroke(1, stroke)
+            self.actions.go_to(points_num + 1, self.positions.i01)
             self.actions.start_job()
             self.actions.wait_job(job_len)
 
@@ -143,13 +143,29 @@ if __name__ == "__main__":
     actions = actions.Templates(requests)
 
 
-    arduino_client = arduino_client.Client("/dev/cu.usbserial-1460", 115200, 1)
+    arduino_client = arduino_client.Client("/dev/cu.usbserial-1440", 115200, 1)
 
     defined_positions = positions.DefinedPositions()
     actionBundle = ActionBundle(actions, arduino_client, defined_positions)
-
+    strokes = stroke_loader.load("./stroke_test/atom/stcoke.csv")
     actionBundle.initialize()
 
-    strokes = stroke_loader.load("./stroke_test/atom/stcoke.csv")
-    actionBundle.draw_strokes(strokes[0:5])
+    '''
+    for point in strokes[0].get_points():
+        print(point.get_list())
+    '''
+
+    current_brush_index = 0
+    prev_brush_index = 0
+    for i in range(1):
+        if i == 0:
+            actionBundle.get_brush(0)
+            actionBundle.get_color()
+            actionBundle.draw_strokes(strokes[10:15])
+            actionBundle.put_brush(6)
+        else :
+            actionBundle.get_brush(i)
+            actionBundle.get_color()
+            actionBundle.draw_strokes(strokes[i*5+10:(i+1)*5+10])
+            actionBundle.wash_brush(i, i-1)
 

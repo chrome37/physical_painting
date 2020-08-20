@@ -8,7 +8,7 @@ class Stroke:
     def __init__(self, x0, y0, x1, y1, x2, y2, z0, z2, r, g, b, thickness):
         config = CoordConfig()
         self.color = StrokeColor(r, g, b)
-        point_num = 50
+        point_num = 20
         t_array = np.arange(0, 1, 1/point_num)
         points_disp = []
         for t in t_array:
@@ -17,7 +17,7 @@ class Stroke:
         self.points_disp = points_disp
 
         points_world = [self.__convert(
-            i[0]*255, i[1]*255, i[2], config) for i in points_disp]
+            i[0], i[1], i[2], config) for i in points_disp]
         self.points_world = points_world
 
         self.points = [positions.RobotCoord(i[0], i[1], i[2], config.ROBOT_TIP_ROTATION[0],
@@ -35,14 +35,17 @@ class Stroke:
             [0, 1, 0],
             [np.sin(config.EASEL_ANG), 0, np.cos(config.EASEL_ANG)]])
 
-        x_new = x / config.IMG_X * config.CANVAS_X - config.CANVAS_X / 2
-        y_new = config.CANVAS_Y - (y / config.IMG_Y * config.CANVAS_Y) + config.CANVAS_MERGIN_BUTTON
+        #x_new = x / config.IMG_X * config.CANVAS_X - config.CANVAS_X / 2
+        #y_new = config.CANVAS_Y - (y / config.IMG_Y * config.CANVAS_Y) + config.CANVAS_MERGIN_BUTTON
+
+        x_new = x * config.CANVAS_X - config.CANVAS_X / 2
+        y_new = config.CANVAS_Y - (y * config.CANVAS_Y) + config.CANVAS_MERGIN_BUTTON
         c = [0, x_new, y_new]
 
         #  押し付け量の考慮
-        #EASEL_CANPAS_OFFSET[0] += z
+        #EASEL_CANVAS_OFFSET[0] += z
 
-        return [int(i*1000) for i in config.EASEL_BASE_OFFSET + np.dot(config.EASEL_CANPAS_OFFSET, R) + np.dot(c, R)]
+        return [int(i*1000) for i in config.EASEL_BASE_OFFSET + np.dot(config.EASEL_CANVAS_OFFSET, R) + np.dot(c, R)]
 
     def get_points(self):
         return self.points
@@ -80,23 +83,24 @@ class CoordConfig:
 
         # mm
         # ROBOT_TIP_TO_PEN_TIP = 130 (実測値は105だったが130でうまく動いている、キャンバスの厚さもこの定数に含まれている？)
-        self.ROBOT_TIP_TO_PEN_TIP = 105
+        #self.ROBOT_TIP_TO_PEN_TIP = 105
+        self.ROBOT_TIP_TO_PEN_TIP = 130
 
         # mm
         # キャンバス厚さ
-        self.CANVAS_THICKNESS = 25
+        self.CANVAS_THICKNESS = 8
 
-        self.ROBOT_TIP_ROTATION = [-1050000, 0, 0]
+        self.ROBOT_TIP_ROTATION = [-1050000, 0, 900000]
         #ROBOT_TIP_ROTATION = [-1050000, 0, 900000]
 
         self.EASEL_BASE_OFFSET = np.array([-398, 0, -(360+510)])
-        self.EASEL_CANPAS_OFFSET = np.array(
+        self.EASEL_CANVAS_OFFSET = np.array(
             [self.EASEL_THICKNESS + self.ROBOT_TIP_TO_PEN_TIP + self.CANVAS_THICKNESS, 0, self.EASEL_LENGTH])
 
         self.IMG_X = 200
         self.IMG_Y = 200
-        self.CANVAS_X = 150
-        self.CANVAS_Y = 150
+        self.CANVAS_X = 200
+        self.CANVAS_Y = 200
 
 
 if __name__ == "__main__":

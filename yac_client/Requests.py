@@ -65,6 +65,15 @@ class Templates():
         payload = "<00>"
         self._base_request(data_size, command, data_index, request_num, compute, payload)
 
+    def set_b002_to_0(self):
+        data_size = "<01><00>"
+        command = "<7A><00>"    # byte type
+        data_index = "<02><00>"    # B002
+        request_num = "<01>"    # fixed
+        compute = "<02>"    # read: Set_Attribute_All ：0x02
+        payload = "<00>"
+        self._base_request(data_size, command, data_index, request_num, compute, payload)
+
     def set_b001(self, df_len):
         data_size="<01><00>"
         command = "<7A><00>"    # byte type
