@@ -8,6 +8,7 @@ class Stroke:
     def __init__(self, x0, y0, x1, y1, x2, y2, z0, z2, r, g, b, thickness):
         config = CoordConfig()
         self.color = StrokeColor(r, g, b)
+        self.thickness = thickness
         point_num = 20
         t_array = np.arange(0, 1, 1/point_num)
         points_disp = []
@@ -24,10 +25,12 @@ class Stroke:
                                             config.ROBOT_TIP_ROTATION[1], config.ROBOT_TIP_ROTATION[2], thickness) for i in points_world]
 
     def __bezier(self, x0, y0, x1, y1, x2, y2, z0, z2, t):
+        #x1 = x0 + (x2 - x0) * x1
+        #y1 = y0 + (y2 - y0) + y1
         x = ((1-t) * (1-t) * x0 + 2 * t * (1-t) * x1 + t * t * x2)
         y = ((1-t) * (1-t) * y0 + 2 * t * (1-t) * y1 + t * t * y2)
         z = ((1-t) * z0 + t * z2)
-        return x, y, z, 0
+        return y, x, z, 0
 
     def __convert(self, x, y, z, config):
         R = np.array([
@@ -59,6 +62,9 @@ class Stroke:
     def get_color(self):
         return self.color
 
+    def get_thickness(self):
+        return self.thickness
+
 
 class StrokeColor:
     def __init__(self, r, g, b):
@@ -88,7 +94,7 @@ class CoordConfig:
 
         # mm
         # キャンバス厚さ
-        self.CANVAS_THICKNESS = 8
+        self.CANVAS_THICKNESS = 9
 
         self.ROBOT_TIP_ROTATION = [-1050000, 0, 900000]
         #ROBOT_TIP_ROTATION = [-1050000, 0, 900000]

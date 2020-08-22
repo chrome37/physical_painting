@@ -6,6 +6,7 @@ import arduino.client as arduino_client
 import yac_client.positions as positions
 import time
 import utils.stroke_loader as stroke_loader
+import config
 class ActionBundle:
     def __init__(self, actions_template, arduino_client, positions):
         self.config = ActionBundleConfig()
@@ -136,6 +137,17 @@ class ActionBundle:
             self.actions.start_job()
             self.actions.wait_job(job_len)
 
+    def test(self):
+        self.arduino.pallet_feed()
+        self.actions.init_YAC()
+        job_len = self.actions.set_job_len(3)
+        self.actions.set_speed(self.config.get_color_speed, job_len)
+        self.actions.go_to(0, self.positions.i01)
+        self.actions.go_to(1, self.positions.p00)
+        self.actions.go_to(2, self.positions.p01)
+        self.actions.start_job()
+        self.actions.wait_job(job_len)
+
 class ActionBundleConfig:
     def __init__(self):
         self.check_position_interval = 0.1
@@ -143,23 +155,23 @@ class ActionBundleConfig:
         self.put_brush_speed = 2500
         self.draw_strokes_speed = 5000
         self.get_color_speed = 2500
-        self.tool_detach_time = 1000
+        self.tool_detach_time = 3000
         self.wash_pallet_time = 2000
         self.pallet_move_wait_time = 3
 
-
 if __name__ == "__main__":
-    config = YAC_client.Config(src_addr='localhost', src_port=10050, dest_addr='localhost', dest_port=10040)
+    config = YAC_client.Config(src_addr=config.src_addr, src_port=config.src_port, dest_addr=config.dest_addr, dest_port=config.dest_port)
     client = YAC_client.Client(config)
     requests = requests.Templates(client)
     actions = actions.Templates(requests)
-
-
-    arduino_client = arduino_client.Client("/dev/cu.usbserial-1440", 115200, 1)
+    arduino_client = arduino_client.Client("/dev/cu.usbserial-1460", 115200, 1)
 
     defined_positions = positions.DefinedPositions()
     actionBundle = ActionBundle(actions, arduino_client, defined_positions)
-    strokes = stroke_loader.load("./stroke_test/atom/stcoke.csv")
+
+    #actionBundle.test()
+
+    strokes = stroke_loader.load("./stroke_test/suzu/stroke.csv")
     actionBundle.initialize()
 
     current_brush_index = 0
@@ -175,4 +187,3 @@ if __name__ == "__main__":
             actionBundle.get_color()
             actionBundle.draw_strokes(strokes[i*5+10:(i+1)*5+10])
             actionBundle.wash_brush(i, i-1)
-

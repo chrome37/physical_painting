@@ -2,7 +2,9 @@
 import serial
 import serial.tools.list_ports
 import time
-
+import os
+import pty
+import config
 class Client:
     def __init__(self, port, bps, timeout = 1):
         self.connection = serial.Serial(port, bps, timeout=timeout)
@@ -43,6 +45,11 @@ class Client:
 
         for i in range(len(times)):
             command_string = f"COLOR N{str(i)} T{str(times[i]).zfill(4)}"
+            self.__execute(command_string)
+
+    def fill_tube(self):
+        for i in range(5):
+            command_string = f"COLOR N{str(i)} T20000"
             self.__execute(command_string)
 
     def wash_pallet(self, time):
@@ -86,4 +93,4 @@ if __name__ == "__main__":
     ports = list(serial.tools.list_ports.comports())
     for p in ports:
         print(p)
-    #client = Client("/dev/cu.usbserial-1460", 115200, 1)
+    arduino_client = Client(config.serial_port, config.baudrate, 1)
