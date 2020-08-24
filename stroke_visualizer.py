@@ -9,7 +9,7 @@ def draw_disp(strokes):
         x = [i[0] for i in stroke.get_points_disp()]
         y = [i[1] for i in stroke.get_points_disp()]
         color = stroke.get_color()
-        plt.plot(x, y, linewidth=stroke.thickness*20, color=[color.b, color.g, color.r, 0.8])
+        plt.plot(x, y, linewidth=20, color=[color.r, color.g, color.b, 0.8])
 
     plt.show()
 
