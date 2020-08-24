@@ -5,10 +5,10 @@ from . import positions
 
 
 class Stroke:
-    def __init__(self, x0, y0, x1, y1, x2, y2, z0, z2, r, g, b, thickness):
+    def __init__(self, x0, y0, x1, y1, x2, y2, z0, z2, r, g, b, a):
         config = CoordConfig()
-        self.color = StrokeColor(r, g, b)
-        self.thickness = thickness
+        self.color = StrokeColor(r, g, b, a)
+        self.thickness = a
         point_num = 20
         t_array = np.arange(0, 1, 1/point_num)
         points_disp = []
@@ -22,7 +22,7 @@ class Stroke:
         self.points_world = points_world
 
         self.points = [positions.RobotCoord(i[0], i[1], i[2], config.ROBOT_TIP_ROTATION[0],
-                                            config.ROBOT_TIP_ROTATION[1], config.ROBOT_TIP_ROTATION[2], thickness) for i in points_world]
+                                            config.ROBOT_TIP_ROTATION[1], config.ROBOT_TIP_ROTATION[2], self.thickness) for i in points_world]
 
 
     def __bezier(self, x0, y0, x1, y1, x2, y2, z0, z2, t):
@@ -68,10 +68,31 @@ class Stroke:
 
 
 class StrokeColor:
-    def __init__(self, r, g, b):
+    def __init__(self, r, g, b, a):
         self.r = r
         self.g = g
         self.b = b
+        self.a = a
+
+    def get_rgba(self):
+        return (self.r, self.g, self.b, self.a)
+
+    def get_rgba_256(self):
+        return (self.r * 255, self.g * 255, self.b*255, self.a)
+
+    def get_rgb(self):
+        r = 1 - self.a + self.a * self.r
+        g = 1 - self.a + self.a * self.g
+        b = 1 - self.a + self.a * self.b
+        return (r, g, b)
+
+    def get_rgb_256(self):
+        r = 1 - self.a + self.a * self.r
+        g = 1 - self.a + self.a * self.g
+        b = 1 - self.a + self.a * self.b
+        return (r * 255, g * 255, b * 255)
+
+
 
 
 class CoordConfig:

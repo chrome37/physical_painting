@@ -59,10 +59,10 @@ if __name__ == "__main__":
     for i in range(loop_num):
         if i == 0:
             action_bundle.initialize()
-            color  = target_strokes[0].get_color()
             print(current_brush.index, current_brush.thickness)
 
-            action_bundle.make_color(color.b, color.g, color.r)
+            r, g, b  = target_strokes[0].get_color().get_rgb()
+            action_bundle.make_color(r, g, b)
             action_bundle.get_brush(current_brush.index)
             action_bundle.get_color()
             action_bundle.draw_strokes(target_strokes)
@@ -71,12 +71,12 @@ if __name__ == "__main__":
         else :
             target_strokes = strokes[i * stroke_per_loop:(i + 1) * stroke_per_loop]
             current_brush = brush_select(prev_brush, target_strokes)
-            color  = target_strokes[0].get_color()
             print(current_brush.index, current_brush.thickness)
             if current_brush.index == prev_brush.index:
                 break
 
-            action_bundle.make_color(color.b, color.g, color.r)
+            r, g, b  = target_strokes[0].get_color().get_rgb()
+            action_bundle.make_color(r, g, b)
             action_bundle.get_brush(current_brush.index)
             action_bundle.get_color()
             action_bundle.draw_strokes(target_strokes)
