@@ -63,8 +63,11 @@ class Templates():
         self.requests.set_b001(n)
         return n
 
-    def set_speed(self, speed, range):
-        self.requests.set_speed(speed, range)
+    def set_speed(self, speed, set_range):
+        self.requests.set_speed(speed, set_range)
+
+    def set_smoothness(self, level, set_range):
+        self.requests.set_smoothness_level(level, set_range)
 
     def get_current_position(self):
         recv, addr = self.requests.get_position()

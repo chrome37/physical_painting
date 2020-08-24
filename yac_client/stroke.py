@@ -25,8 +25,6 @@ class Stroke:
                                             config.ROBOT_TIP_ROTATION[1], config.ROBOT_TIP_ROTATION[2], thickness) for i in points_world]
 
     def __bezier(self, x0, y0, x1, y1, x2, y2, z0, z2, t):
-        #x1 = x0 + (x2 - x0) * x1
-        #y1 = y0 + (y2 - y0) + y1
         x = ((1-t) * (1-t) * x0 + 2 * t * (1-t) * x1 + t * t * x2)
         y = ((1-t) * (1-t) * y0 + 2 * t * (1-t) * y1 + t * t * y2)
         z = ((1-t) * z0 + t * z2)

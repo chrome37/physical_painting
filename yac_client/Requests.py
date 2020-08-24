@@ -126,6 +126,18 @@ class Templates():
 
         print('set speed done')
 
+    def set_smoothness_level(self, value, set_range):
+        for count in range(set_range):
+            data_size = "<04><00>"
+            command = "<7C><00>"
+            data_index = "<" + '{:02X}'.format(count) + ">" + "<00>"
+            request_num = "<01>"
+            compute = "<02>"
+            padding = "<00><00>"
+
+            data = smoothness_level = self._to_ascii(np.int64(value), 4)
+            self._base_request(data_size, command, data_index, request_num, compute, data)
+
     def set_position(self, i, x, y, z, r_x, r_y, r_z, e, r_or_p):
 
         data_size = "<34><00>"      # dynamic (fixed: 52 byte for position)

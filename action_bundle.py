@@ -131,6 +131,7 @@ class ActionBundle:
             self.actions.init_YAC()
             job_len = self.actions.set_job_len(points_num + 2)
             self.actions.set_speed(self.config.draw_strokes_speed, job_len)
+            self.actions.set_smoothness(self.config.draw_strokes_smoothness, job_len)
             self.actions.go_to(0, self.positions.i01)
             self.actions.draw_stroke(1, stroke)
             self.actions.go_to(points_num + 1, self.positions.i01)
@@ -154,6 +155,7 @@ class ActionBundleConfig:
         self.get_brush_speed = 2500
         self.put_brush_speed = 2500
         self.draw_strokes_speed = 5000
+        self.draw_strokes_smoothness = 8
         self.get_color_speed = 2500
         self.tool_detach_time = 3000
         self.wash_pallet_time = 2000
