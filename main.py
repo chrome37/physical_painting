@@ -28,11 +28,11 @@ def make_action_bundle():
     return action_bundle.ActionBundle(actions_template, arduino_client, defined_positions)
 
 def brush_select(prev_brush, target_strokes):
-    stroke_thickness = max([i.get_thickness() for i in target_strokes]) * 15
+    stroke_thickness = max([i.get_thickness() for i in target_strokes]) * config.image_size
     brush_thickness = "md"
-    if stroke_thickness < 3:
+    if stroke_thickness < config.small_brush_boundary:
         brush_thickness = "sm"
-    elif stroke_thickness >= 6:
+    elif stroke_thickness >= config.larget_brush_boundary:
         brush_thickness = "lg"
 
     current_brush = None

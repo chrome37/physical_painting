@@ -11,3 +11,8 @@ baudrate = 115200
 # sequence config
 stroke_file_path = "./stroke_test/horse/stroke.csv"
 stroke_per_loop = 5
+
+# brush selection config
+small_brush_boundary = 3
+large_brush_boundary = 6
+image_size = 15
