@@ -1,12 +1,12 @@
-import yac_client.client as YAC_client
-import yac_client.requests as requests
-import yac_client.actions as actions
-import yac_client.stroke as stroke
-import arduino.client as arduino
-import yac_client.positions as positions
-import action_bundle
-import brush
-import utils.stroke_loader as stroke_loader
+import modules.yac_client.client as YAC_client
+import modules.yac_client.requests as requests
+import modules.yac_client.actions as actions
+import modules.yac_client.stroke as stroke
+import modules.arduino.client as arduino
+import modules.yac_client.positions as positions
+import modules.action_bundle as action_bundle
+import modules.brush as brush
+import modules.utils.stroke_loader as stroke_loader
 import config
 import pty, os
 
@@ -17,11 +17,11 @@ def make_action_bundle():
     actions_template = actions.Templates(requests_template)
 
 
-    #master, slave = pty.openpty()
-    #s_name = os.ttyname(slave)
-    #arduino_client = arduino.Client(s_name, config.baudrate, 1)
+    master, slave = pty.openpty()
+    s_name = os.ttyname(slave)
+    arduino_client = arduino.Client(s_name, config.baudrate, 1)
 
-    arduino_client = arduino.Client(config.serial_port, config.baudrate, 1)
+    #arduino_client = arduino.Client(config.serial_port, config.baudrate, 1)
 
     defined_positions = positions.DefinedPositions()
 
@@ -32,7 +32,7 @@ def brush_select(prev_brush, target_strokes):
     brush_thickness = "md"
     if stroke_thickness < config.small_brush_boundary:
         brush_thickness = "sm"
-    elif stroke_thickness >= config.larget_brush_boundary:
+    elif stroke_thickness >= config.large_brush_boundary:
         brush_thickness = "lg"
 
     current_brush = None

@@ -1,12 +1,4 @@
-import yac_client.client as YAC_client
-import yac_client.requests as requests
-import yac_client.actions as actions
-import yac_client.stroke as stroke
-import arduino.client as arduino_client
-import yac_client.positions as positions
 import time
-import utils.stroke_loader as stroke_loader
-import config
 class ActionBundle:
     def __init__(self, actions_template, arduino_client, positions):
         self.config = ActionBundleConfig()
@@ -193,16 +185,3 @@ class ActionBundleConfig:
         self.tool_detach_time = 3000
         self.wash_pallet_time = 2000
         self.pallet_move_wait_time = 5
-
-if __name__ == "__main__":
-    config = YAC_client.Config(src_addr=config.src_addr, src_port=config.src_port, dest_addr=config.dest_addr, dest_port=config.dest_port)
-    client = YAC_client.Client(config)
-    requests = requests.Templates(client)
-    actions = actions.Templates(requests)
-    arduino_client = arduino_client.Client("/dev/cu.usbserial-1460", 115200, 1)
-
-    defined_positions = positions.DefinedPositions()
-    actionBundle = ActionBundle(actions, arduino_client, defined_positions)
-
-    actionBundle.initialize()
-    actionBundle.pallet_clear()

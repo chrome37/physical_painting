@@ -1,4 +1,4 @@
-from yac_client import stroke as stroke
+from modules.yac_client import stroke as stroke
 import csv
 
 def load(path):

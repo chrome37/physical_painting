@@ -1,7 +1,7 @@
 # YAC udp connection config
-src_addr='10.0.0.10'
+src_addr="localhost"
 src_port=10050
-dest_addr='10.0.0.2'
+dest_addr='localhost'
 dest_port=10040
 
 # arduino connection config
