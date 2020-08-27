@@ -6,9 +6,9 @@ from . import positions
 
 class Stroke:
     def __init__(self, x0, y0, x1, y1, x2, y2, z0, z2, r, g, b, a):
-        config = CoordConfig()
+        self.config = CoordConfig()
         self.color = StrokeColor(r, g, b, a)
-        self.thickness = a
+        self.thickness = (z0 + z2) * 0.5
         point_num = 20
         t_array = np.arange(0, 1, 1/point_num)
         points_disp = []
@@ -18,11 +18,11 @@ class Stroke:
         self.points_disp = points_disp
 
         points_world = [self.__convert(
-            i[0], i[1], i[2], config) for i in points_disp]
+            i[0], i[1], i[2]) for i in points_disp]
         self.points_world = points_world
 
-        self.points = [positions.RobotCoord(i[0], i[1], i[2], config.ROBOT_TIP_ROTATION[0],
-                                            config.ROBOT_TIP_ROTATION[1], config.ROBOT_TIP_ROTATION[2], self.thickness) for i in points_world]
+        self.points = [positions.RobotCoord(i[0], i[1], i[2], self.config.ROBOT_TIP_ROTATION[0],
+                                            self.config.ROBOT_TIP_ROTATION[1], self.config.ROBOT_TIP_ROTATION[2], self.thickness) for i in points_world]
 
 
     def __bezier(self, x0, y0, x1, y1, x2, y2, z0, z2, t):
@@ -33,23 +33,23 @@ class Stroke:
         z = ((1-t) * z0 + t * z2)
         return y, x, z, 0
 
-    def __convert(self, x, y, z, config):
+    def __convert(self, x, y, z):
         R = np.array([
-            [np.cos(config.EASEL_ANG), 0, -np.sin(config.EASEL_ANG)],
+            [np.cos(self.config.EASEL_ANG), 0, -np.sin(self.config.EASEL_ANG)],
             [0, 1, 0],
-            [np.sin(config.EASEL_ANG), 0, np.cos(config.EASEL_ANG)]])
+            [np.sin(self.config.EASEL_ANG), 0, np.cos(self.config.EASEL_ANG)]])
 
         #x_new = x / config.IMG_X * config.CANVAS_X - config.CANVAS_X / 2
         #y_new = config.CANVAS_Y - (y / config.IMG_Y * config.CANVAS_Y) + config.CANVAS_MERGIN_BUTTON
 
-        x_new = x * config.CANVAS_X - config.CANVAS_X / 2
-        y_new = config.CANVAS_Y - (y * config.CANVAS_Y) + config.CANVAS_MERGIN_BUTTON
+        x_new = x * self.config.CANVAS_X - self.config.CANVAS_X / 2
+        y_new = self.config.CANVAS_Y - (y * self.config.CANVAS_Y) + self.config.CANVAS_MERGIN_BUTTON
         c = [0, x_new, y_new]
-
         #  押し付け量の考慮
-        #EASEL_CANVAS_OFFSET[0] += z
 
-        return [int(i*1000) for i in config.EASEL_BASE_OFFSET + np.dot(config.EASEL_CANVAS_OFFSET, R) + np.dot(c, R)]
+        new_easel_canvas_offset = [self.config.EASEL_CANVAS_OFFSET[0] - z * 10, self.config.EASEL_CANVAS_OFFSET[1], self.config.EASEL_CANVAS_OFFSET[2]]
+
+        return [int(i*1000) for i in self.config.EASEL_BASE_OFFSET + np.dot(new_easel_canvas_offset, R) + np.dot(c, R)]
 
     def get_points(self):
         return self.points
@@ -112,7 +112,7 @@ class CoordConfig:
         # mm
         # ROBOT_TIP_TO_PEN_TIP = 130 (実測値は105だったが130でうまく動いている、キャンバスの厚さもこの定数に含まれている？)
         #self.ROBOT_TIP_TO_PEN_TIP = 105
-        self.ROBOT_TIP_TO_PEN_TIP = 130
+        self.ROBOT_TIP_TO_PEN_TIP = 120
 
         # mm
         # キャンバス厚さ
@@ -127,8 +127,8 @@ class CoordConfig:
 
         self.IMG_X = 200
         self.IMG_Y = 200
-        self.CANVAS_X = 200
-        self.CANVAS_Y = 200
+        self.CANVAS_X = 150
+        self.CANVAS_Y = 150
 
 
 if __name__ == "__main__":

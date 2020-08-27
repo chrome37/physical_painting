@@ -28,11 +28,11 @@ def make_action_bundle():
     return action_bundle.ActionBundle(actions_template, arduino_client, defined_positions)
 
 def brush_select(prev_brush, target_strokes):
-    stroke_thickness = target_strokes[0].get_thickness() * 20
+    stroke_thickness = max([i.get_thickness() for i in target_strokes]) * 15
     brush_thickness = "md"
-    if stroke_thickness < 3.5:
+    if stroke_thickness < 3:
         brush_thickness = "sm"
-    elif stroke_thickness >= 12.5:
+    elif stroke_thickness >= 6:
         brush_thickness = "lg"
 
     current_brush = None
@@ -48,7 +48,7 @@ def brush_select(prev_brush, target_strokes):
 
 if __name__ == "__main__":
     action_bundle = make_action_bundle()
-    strokes = stroke_loader.load(config.stroke_file_path)[0:15]
+    strokes = stroke_loader.load(config.stroke_file_path)
 
     stroke_per_loop = config.stroke_per_loop
     loop_num = int(len(strokes) / stroke_per_loop)
@@ -66,6 +66,7 @@ if __name__ == "__main__":
             action_bundle.get_brush(current_brush.index)
             action_bundle.get_color()
             action_bundle.draw_strokes(target_strokes)
+            action_bundle.pallet_clear()
             action_bundle.put_brush(6)
             prev_brush = current_brush
         else :
@@ -80,6 +81,7 @@ if __name__ == "__main__":
             action_bundle.get_brush(current_brush.index)
             action_bundle.get_color()
             action_bundle.draw_strokes(target_strokes)
+            action_bundle.pallet_clear()
             action_bundle.wash_brush(current_brush.index, prev_brush.index)
             prev_brush = current_brush
 

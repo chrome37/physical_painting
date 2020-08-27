@@ -40,6 +40,7 @@ class ActionBundle:
         self.actions.refresh()
         job_len = self.actions.set_job_len(5)
         self.actions.set_speed(self.config.get_brush_speed, job_len)
+        self.actions.set_smoothness(self.config.get_brush_smoothness, job_len)
         self.actions.go_to(0, self.positions.i00)
         self.actions.go_to(1, position_brush_above)
         self.actions.go_to(2, position_brush)
@@ -52,6 +53,7 @@ class ActionBundle:
         self.actions.init_YAC()
         job_len = self.actions.set_job_len(8)
         self.actions.set_speed(self.config.get_brush_speed, job_len)
+        self.actions.set_smoothness(self.config.get_brush_smoothness, job_len)
         self.actions.go_to(0, self.positions.i00)
         self.actions.go_to(1, self.positions.w00)
         self.actions.go_to(2, self.positions.w01)
@@ -70,6 +72,7 @@ class ActionBundle:
         self.actions.refresh()
         job_len = self.actions.set_job_len(3)
         self.actions.set_speed(self.config.put_brush_speed, job_len)
+        self.actions.set_smoothness(self.config.put_brush_smoothness, job_len)
         self.actions.go_to(0, self.positions.i00)
         self.actions.go_to(1, position_brush_above)
         self.actions.go_to(2, position_brush)
@@ -78,10 +81,12 @@ class ActionBundle:
         self.__wait_moving(position_brush)
 
         self.arduino.tool(self.config.tool_detach_time)
+        time.sleep(0.5)
 
         self.actions.refresh()
         job_len = self.actions.set_job_len(2)
         self.actions.set_speed(self.config.put_brush_speed, job_len)
+        self.actions.set_smoothness(self.config.put_brush_smoothness, job_len)
         self.actions.go_to(0, position_brush_above)
         self.actions.go_to(1, self.positions.i00)
         self.actions.start_job()
@@ -90,15 +95,22 @@ class ActionBundle:
     def get_color(self):
         self.arduino.pallet_feed()
         self.actions.init_YAC()
-        job_len = self.actions.set_job_len(7)
+        job_len = self.actions.set_job_len(3)
         self.actions.set_speed(self.config.get_color_speed, job_len)
+        self.actions.set_smoothness(self.config.get_color_smoothness, job_len)
         self.actions.go_to(0, self.positions.i01)
         self.actions.go_to(1, self.positions.p00)
         self.actions.go_to(2, self.positions.p01)
-        self.actions.go_to(3, self.positions.p02)
-        self.actions.go_to(4, self.positions.p03)
-        self.actions.go_to(5, self.positions.p00)
-        self.actions.go_to(6, self.positions.i01)
+        self.actions.start_job()
+        self.__wait_moving(self.positions.p01)
+        time.sleep(1)
+
+        self.actions.refresh()
+        job_len = self.actions.set_job_len(4)
+        self.actions.go_to(0, self.positions.p02)
+        self.actions.go_to(1, self.positions.p03)
+        self.actions.go_to(2, self.positions.p00)
+        self.actions.go_to(3, self.positions.i01)
         self.actions.start_job()
         self.actions.wait_job(job_len)
 
@@ -106,11 +118,14 @@ class ActionBundle:
         self.arduino.pallet_dispose()
         time.sleep(self.config.pallet_move_wait_time)
         self.arduino.pallet_receive()
+        '''
         time.sleep(self.config.pallet_move_wait_time)
         self.arduino.wash_pallet(self.config.wash_pallet_time)
+        time.sleep(5)
         self.arduino.pallet_dispose()
         time.sleep(self.config.pallet_move_wait_time)
         self.arduino.pallet_receive()
+        '''
 
     def make_color(self, r, g, b):
         self.arduino.pallet_receive()
@@ -141,25 +156,43 @@ class ActionBundle:
     def test(self):
         self.arduino.pallet_feed()
         self.actions.init_YAC()
-        job_len = self.actions.set_job_len(3)
+        job_len = self.actions.set_job_len(1)
         self.actions.set_speed(self.config.get_color_speed, job_len)
-        self.actions.go_to(0, self.positions.i01)
-        self.actions.go_to(1, self.positions.p00)
-        self.actions.go_to(2, self.positions.p01)
+        self.actions.set_smoothness(self.config.get_color_smoothness, job_len)
+        #self.actions.go_to(0, self.positions.i01)
+        #self.actions.go_to(0, self.positions.p00)
+        self.actions.go_to(0, self.positions.p01)
+        self.actions.start_job()
+        self.__wait_moving(self.positions.p01)
+        time.sleep(1)
+        '''
+        self.actions.refresh()
+        job_len = self.actions.set_job_len(4)
+        self.actions.go_to(0, self.positions.p02)
+        self.actions.go_to(1, self.positions.p03)
+        self.actions.go_to(2, self.positions.p00)
+        self.actions.go_to(3, self.positions.i01)
         self.actions.start_job()
         self.actions.wait_job(job_len)
-
+        '''
 class ActionBundleConfig:
     def __init__(self):
         self.check_position_interval = 0.1
         self.get_brush_speed = 2500
+        self.get_brush_smoothness = 0
+
         self.put_brush_speed = 2500
-        self.draw_strokes_speed = 5000
-        self.draw_strokes_smoothness = 8
+        self.put_brush_smoothness = 0
+
+        self.draw_strokes_speed = 2500
+        self.draw_strokes_smoothness = 5
+
         self.get_color_speed = 2500
+        self.get_color_smoothness = 0
+
         self.tool_detach_time = 3000
         self.wash_pallet_time = 2000
-        self.pallet_move_wait_time = 3
+        self.pallet_move_wait_time = 5
 
 if __name__ == "__main__":
     config = YAC_client.Config(src_addr=config.src_addr, src_port=config.src_port, dest_addr=config.dest_addr, dest_port=config.dest_port)
@@ -171,21 +204,5 @@ if __name__ == "__main__":
     defined_positions = positions.DefinedPositions()
     actionBundle = ActionBundle(actions, arduino_client, defined_positions)
 
-    #actionBundle.test()
-
-    strokes = stroke_loader.load("./stroke_test/suzu/stroke.csv")
     actionBundle.initialize()
-
-    current_brush_index = 0
-    prev_brush_index = 0
-    for i in range(1):
-        if i == 0:
-            actionBundle.get_brush(0)
-            actionBundle.get_color()
-            actionBundle.draw_strokes(strokes[10:15])
-            actionBundle.put_brush(6)
-        else :
-            actionBundle.get_brush(i)
-            actionBundle.get_color()
-            actionBundle.draw_strokes(strokes[i*5+10:(i+1)*5+10])
-            actionBundle.wash_brush(i, i-1)
+    actionBundle.pallet_clear()
