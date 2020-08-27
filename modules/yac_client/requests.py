@@ -1,14 +1,9 @@
 from . import client
-from argparse import ArgumentParser
 import pandas as pd
-import sys
-import os.path
 import numpy as np
 import binascii
-import socket
 import re
 import time
-import csv
 import binascii
 
 
@@ -222,25 +217,3 @@ class Templates():
                 time.sleep(0.1)
                 break
         ### WAIT JOB COMPLETE END ###
-
-
-
-if __name__ == "__main__":
-    config = client.Config(src_addr='10.0.0.10', src_port=10050, dest_addr='10.0.0.2', dest_port=10040)
-    yac_client = client.Client(config)
-    templates = Templates(client)
-    templates.servo_on()
-    recv, addr = templates.get_position()
-    answer = binascii.hexlify(recv).decode("utf-8")
-
-    for i in range(7):
-        hexstr = ""
-        if i == 0:
-            hexstr = answer[-8:]
-        else:
-            hexstr = answer[-8*(i+1):-8*i]
-        bytes_be = bytes.fromhex(hexstr)
-        bytes_le = bytes_be[::-1]
-        hex_le = bytes_le.hex()
-        x = int(hex_le, 16)
-        print(np.int32(x))

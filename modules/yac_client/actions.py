@@ -1,7 +1,4 @@
-from . import requests
-from . import client
 from . import positions
-from . import stroke
 import numpy as np
 import binascii
 
@@ -88,15 +85,3 @@ class Templates():
 
     def wait_job(self, job_len):
         self.requests.wait_job_complete(job_len)
-
-
-if __name__ == "__main__":
-    config = client.Config(src_addr='10.0.0.10', src_port=10050, dest_addr='10.0.0.2', dest_port=10040)
-    yac_client = client.Client(config)
-    requests_template = requests.Templates(yac_client)
-    actions = Templates(requests_template)
-
-    # sequence
-    actions.init_YAC()
-    current = actions.get_current_position()
-    print(current.get_list())
