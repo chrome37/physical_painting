@@ -27,10 +27,6 @@ class Client:
         return times
 
     def color_mix(self, r, g, b):
-        r /= 255
-        g /= 255
-        b /= 255
-
         k = min(1-r, 1-g, 1-b)
 
         if k == 1:

@@ -16,12 +16,7 @@ def make_action_bundle():
     requests_template = requests.Templates(client)
     actions_template = actions.Templates(requests_template)
 
-
-    master, slave = pty.openpty()
-    s_name = os.ttyname(slave)
-    arduino_client = arduino.Client(s_name, config.baudrate, 1)
-
-    #arduino_client = arduino.Client(config.serial_port, config.baudrate, 1)
+    arduino_client = arduino.Client(config.serial_port, config.baudrate, 1)
 
     defined_positions = positions.DefinedPositions()
 
