@@ -43,7 +43,7 @@ class ActionBundle:
 
     def get_brush_from_washer(self):
         self.actions.init_YAC()
-        job_len = self.actions.set_job_len(8)
+        job_len = self.actions.set_job_len(16)
         self.actions.set_speed(self.config.get_brush_speed, job_len)
         self.actions.set_smoothness(self.config.get_brush_smoothness, job_len)
         self.actions.go_to(0, self.positions.i00)
@@ -53,7 +53,15 @@ class ActionBundle:
         self.actions.go_to(4, self.positions.w02)
         self.actions.go_to(5, self.positions.w03)
         self.actions.go_to(6, self.positions.w02)
-        self.actions.go_to(7, self.positions.i00)
+        self.actions.go_to(7, self.positions.w04)
+        self.actions.go_to(8, self.positions.w05)
+        self.actions.go_to(9, self.positions.w06)
+        self.actions.go_to(10, self.positions.w07)
+        self.actions.go_to(11, self.positions.w08)
+        self.actions.go_to(12, self.positions.w05)
+        self.actions.go_to(13, self.positions.w06)
+        self.actions.go_to(14, self.positions.w07)
+        self.actions.go_to(15, self.positions.i00)
         self.actions.start_job()
         self.actions.wait_job(job_len)
 
@@ -110,14 +118,14 @@ class ActionBundle:
         self.arduino.pallet_dispose()
         time.sleep(self.config.pallet_move_wait_time)
         self.arduino.pallet_receive()
-        '''
+
         time.sleep(self.config.pallet_move_wait_time)
         self.arduino.wash_pallet(self.config.wash_pallet_time)
         time.sleep(5)
         self.arduino.pallet_dispose()
         time.sleep(self.config.pallet_move_wait_time)
         self.arduino.pallet_receive()
-        '''
+
 
     def make_color(self, r, g, b):
         self.arduino.pallet_receive()
@@ -151,22 +159,9 @@ class ActionBundle:
         job_len = self.actions.set_job_len(1)
         self.actions.set_speed(self.config.get_color_speed, job_len)
         self.actions.set_smoothness(self.config.get_color_smoothness, job_len)
-        #self.actions.go_to(0, self.positions.i01)
-        #self.actions.go_to(0, self.positions.p00)
-        self.actions.go_to(0, self.positions.p01)
+        self.actions.go_to(0, self.positions.w00)
         self.actions.start_job()
-        self.__wait_moving(self.positions.p01)
-        time.sleep(1)
-        '''
-        self.actions.refresh()
-        job_len = self.actions.set_job_len(4)
-        self.actions.go_to(0, self.positions.p02)
-        self.actions.go_to(1, self.positions.p03)
-        self.actions.go_to(2, self.positions.p00)
-        self.actions.go_to(3, self.positions.i01)
-        self.actions.start_job()
-        self.actions.wait_job(job_len)
-        '''
+
 class ActionBundleConfig:
     def __init__(self):
         self.check_position_interval = 0.1
