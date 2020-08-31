@@ -31,6 +31,8 @@ class DefinedPositions:
         self.p01 = PulseCoord(44687, -68694, 55941, 26, 73298, -17657, 0)
         self.p02 = PulseCoord(44687, -67828, 56013, 25, 74205, -17657, 0)
         self.p03 = PulseCoord(42847, -72741, 44942, 7,	79760, -16610, 0)
+        self.p04 = PulseCoord(42847, -68864, 44268, 7,	84783, -16811, 0)
+        self.p05 = PulseCoord(44687, -63762, 55443, 25,	79334, -17657, 0)
 
 class PulseCoord:
     def __init__(self, s, l, u, r, b, t, e):

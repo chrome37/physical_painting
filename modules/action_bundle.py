@@ -43,7 +43,7 @@ class ActionBundle:
 
     def get_brush_from_washer(self):
         self.actions.init_YAC()
-        job_len = self.actions.set_job_len(16)
+        job_len = self.actions.set_job_len(24)
         self.actions.set_speed(self.config.get_brush_speed, job_len)
         self.actions.set_smoothness(self.config.get_brush_smoothness, job_len)
         self.actions.go_to(0, self.positions.i00)
@@ -61,7 +61,17 @@ class ActionBundle:
         self.actions.go_to(12, self.positions.w05)
         self.actions.go_to(13, self.positions.w06)
         self.actions.go_to(14, self.positions.w07)
-        self.actions.go_to(15, self.positions.i00)
+
+        self.actions.go_to(15, self.positions.w08)
+        self.actions.go_to(16, self.positions.w05)
+        self.actions.go_to(17, self.positions.w06)
+        self.actions.go_to(18, self.positions.w07)
+
+        self.actions.go_to(19, self.positions.w08)
+        self.actions.go_to(20, self.positions.w05)
+        self.actions.go_to(21, self.positions.w06)
+        self.actions.go_to(22, self.positions.w07)
+        self.actions.go_to(23, self.positions.i00)
         self.actions.start_job()
         self.actions.wait_job(job_len)
 
@@ -106,11 +116,15 @@ class ActionBundle:
         time.sleep(1)
 
         self.actions.refresh()
-        job_len = self.actions.set_job_len(4)
+        job_len = self.actions.set_job_len(8)
         self.actions.go_to(0, self.positions.p02)
         self.actions.go_to(1, self.positions.p03)
-        self.actions.go_to(2, self.positions.p00)
-        self.actions.go_to(3, self.positions.i01)
+        self.actions.go_to(2, self.positions.p04)
+        self.actions.go_to(3, self.positions.p05)
+        self.actions.go_to(4, self.positions.p02)
+        self.actions.go_to(5, self.positions.p03)
+        self.actions.go_to(6, self.positions.p00)
+        self.actions.go_to(7, self.positions.i01)
         self.actions.start_job()
         self.actions.wait_job(job_len)
 
@@ -152,6 +166,26 @@ class ActionBundle:
             self.actions.go_to(points_num + 1, self.positions.i01)
             self.actions.start_job()
             self.actions.wait_job(job_len)
+
+    def test(self):
+        self.arduino.pallet_feed()
+        self.actions.init_YAC()
+        job_len = self.actions.set_job_len(3)
+        self.actions.set_speed(self.config.get_color_speed, job_len)
+        self.actions.set_smoothness(self.config.get_color_smoothness, job_len)
+        self.actions.go_to(0, self.positions.i01)
+        self.actions.go_to(1, self.positions.p00)
+        self.actions.go_to(2, self.positions.p01)
+        self.actions.start_job()
+        self.__wait_moving(self.positions.p01)
+        time.sleep(1)
+
+        self.actions.refresh()
+        job_len = self.actions.set_job_len(1)
+        self.actions.set_speed(self.config.get_color_speed, job_len)
+        self.actions.go_to(0, self.positions.p02)
+        self.actions.start_job()
+        self.actions.wait_job(job_len)
 
 class ActionBundleConfig:
     def __init__(self):
