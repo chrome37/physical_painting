@@ -28,4 +28,5 @@ if __name__ == "__main__":
 
     action_bundle = make_action_bundle()
     strokes = stroke_loader.load(config.stroke_file_path)
-    action_bundle.get_brush_from_washer()
+    r, g, b = strokes[0].get_color().get_rgb()
+    action_bundle.make_color(r, g, b)

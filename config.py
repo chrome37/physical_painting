@@ -9,7 +9,7 @@ serial_port = "/dev/cu.usbserial-1460"
 baudrate = 115200
 
 # sequence config
-stroke_file_path = "./stroke_test/horse/stroke.csv"
+stroke_file_path = "./stroke_test/horse_magic/stroke.csv"
 stroke_per_loop = 5
 
 # brush selection config

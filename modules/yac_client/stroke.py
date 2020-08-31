@@ -25,6 +25,7 @@ class Stroke:
                                             self.config.ROBOT_TIP_ROTATION[1], self.config.ROBOT_TIP_ROTATION[2], self.thickness) for i in points_world]
 
 
+
     def __bezier(self, x0, y0, x1, y1, x2, y2, z0, z2, t):
         x1 = x0 + (x2 - x0) * x1
         y1 = y0 + (y2 - y0) * y1
@@ -112,7 +113,7 @@ class CoordConfig:
         # mm
         # ROBOT_TIP_TO_PEN_TIP = 130 (実測値は105だったが130でうまく動いている、キャンバスの厚さもこの定数に含まれている？)
         #self.ROBOT_TIP_TO_PEN_TIP = 105
-        self.ROBOT_TIP_TO_PEN_TIP = 120
+        self.ROBOT_TIP_TO_PEN_TIP = 118
 
         # mm
         # キャンバス厚さ

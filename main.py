@@ -9,6 +9,7 @@ import modules.brush as brush
 import modules.utils.stroke_loader as stroke_loader
 import config
 import pty, os
+from tqdm import tqdm
 
 def make_action_bundle():
     client_config = YAC_client.Config(src_addr=config.src_addr, src_port=config.src_port, dest_addr=config.dest_addr, dest_port=config.dest_port)
@@ -51,7 +52,7 @@ if __name__ == "__main__":
 
     current_brush = brush_select(brush.brush_set[0], target_strokes)
     prev_brush = None
-    for i in range(loop_num):
+    for i in tqdm(range(loop_num)):
         if i == 0:
             action_bundle.initialize()
             print(current_brush.index, current_brush.thickness)
@@ -65,6 +66,7 @@ if __name__ == "__main__":
             action_bundle.put_brush(6)
             prev_brush = current_brush
         else :
+            print(f"current_loop: {i}/{loop_num}")
             target_strokes = strokes[i * stroke_per_loop:(i + 1) * stroke_per_loop]
             current_brush = brush_select(prev_brush, target_strokes)
             print(current_brush.index, current_brush.thickness)

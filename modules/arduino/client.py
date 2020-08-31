@@ -34,7 +34,7 @@ class Client:
         c = (1 - r - k)/(1-k)
         m = (1 - g - k)/(1-k)
         y = (1 - b - k)/(1-k)
-        w = (r + g + b)/(1-k)
+        w = (r + g + b)/(1-k) * 0.5
         cmykw = [c, m, y, k, w]
         times = self.__cmyk_to_time(cmykw)
 

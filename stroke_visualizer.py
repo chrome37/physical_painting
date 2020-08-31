@@ -1,4 +1,4 @@
-import utils.stroke_loader as stroke_loader
+import modules.utils.stroke_loader as stroke_loader
 import matplotlib.pyplot as plt
 import csv
 from mpl_toolkits.mplot3d import Axes3D
@@ -29,7 +29,7 @@ def draw_world(strokes):
 
 if __name__ == "__main__":
     args = sys.argv
-    strokes = stroke_loader.load(args[1])
+    strokes = stroke_loader.load(args[1])[0:5]
     for i in strokes[0].get_points():
         print(i.get_list())
 
