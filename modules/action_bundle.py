@@ -132,19 +132,21 @@ class ActionBundle:
         self.arduino.pallet_dispose()
         time.sleep(self.config.pallet_move_wait_time)
         self.arduino.pallet_receive()
-
         time.sleep(self.config.pallet_move_wait_time)
+        '''
         self.arduino.wash_pallet(self.config.wash_pallet_time)
         time.sleep(5)
         self.arduino.pallet_dispose()
         time.sleep(self.config.pallet_move_wait_time)
         self.arduino.pallet_receive()
+        '''
 
 
-    def make_color(self, r, g, b):
+    def make_color(self, color):
+        c, m, y, k, w = color.get_cmykw()
         self.arduino.pallet_receive()
         time.sleep(self.config.pallet_move_wait_time)
-        self.arduino.color_mix(r, g, b)
+        self.arduino.color_mix(c, m, y, k, w)
         time.sleep(self.config.pallet_move_wait_time)
 
     def wash_brush(self, current_brush_index, previous_brush_index):

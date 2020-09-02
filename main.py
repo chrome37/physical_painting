@@ -57,8 +57,8 @@ if __name__ == "__main__":
             action_bundle.initialize()
             print(current_brush.index, current_brush.thickness)
 
-            r, g, b  = target_strokes[0].get_color().get_rgb()
-            action_bundle.make_color(r, g, b)
+            color  = target_strokes[0].get_color()
+            action_bundle.make_color(color)
             action_bundle.get_brush(current_brush.index)
             action_bundle.get_color()
             action_bundle.draw_strokes(target_strokes)
@@ -73,8 +73,8 @@ if __name__ == "__main__":
             if current_brush.index == prev_brush.index:
                 break
 
-            r, g, b  = target_strokes[0].get_color().get_rgb()
-            action_bundle.make_color(r, g, b)
+            color  = target_strokes[0].get_color()
+            action_bundle.make_color(color)
             action_bundle.get_brush(current_brush.index)
             action_bundle.get_color()
             action_bundle.draw_strokes(target_strokes)

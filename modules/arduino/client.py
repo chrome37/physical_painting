@@ -21,20 +21,12 @@ class Client:
     def __cmyk_to_time(self, cmykw):
         total = sum(cmykw)
         standardized = [i/total for i in cmykw]
-        amount = 3
+        amount = 4
         speed = 2.5
         times = [int((i*amount/speed)*1000) for i in standardized]
         return times
 
-    def color_mix(self, r, g, b):
-        k = min(1-r, 1-g, 1-b)
-
-        if k == 1:
-            cmykw = [0, 0, 0, 1, 0]
-        c = (1 - r - k)/(1-k)
-        m = (1 - g - k)/(1-k)
-        y = (1 - b - k)/(1-k)
-        w = (r + g + b)/(1-k) * 0.5
+    def color_mix(self, c, m, y, k, w):
         cmykw = [c, m, y, k, w]
         times = self.__cmyk_to_time(cmykw)
 

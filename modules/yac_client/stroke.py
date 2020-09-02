@@ -48,7 +48,7 @@ class Stroke:
         c = [0, x_new, y_new]
         #  押し付け量の考慮
 
-        new_easel_canvas_offset = [self.config.EASEL_CANVAS_OFFSET[0] - z * 10, self.config.EASEL_CANVAS_OFFSET[1], self.config.EASEL_CANVAS_OFFSET[2]]
+        new_easel_canvas_offset = [self.config.EASEL_CANVAS_OFFSET[0] - z * z * 15, self.config.EASEL_CANVAS_OFFSET[1], self.config.EASEL_CANVAS_OFFSET[2]]
 
         return [int(i*1000) for i in self.config.EASEL_BASE_OFFSET + np.dot(new_easel_canvas_offset, R) + np.dot(c, R)]
 
@@ -93,6 +93,18 @@ class StrokeColor:
         b = 1 - self.a + self.a * self.b
         return (r * 255, g * 255, b * 255)
 
+    def get_cmykw(self):
+        r, g, b = self.get_rgb()
+        k = min(1-r, 1-g, 1-b)
+        w = min(r, g, b)
+        if k == 1:
+            cmykw = [0, 0, 0, 1, 0]
+        c = (1 - r - k)/(1-k)
+        m = (1 - g - k)/(1-k)
+        y = (1 - b - k)/(1-k)
+
+        return c, m, y, k, w
+
 
 
 
@@ -113,7 +125,7 @@ class CoordConfig:
         # mm
         # ROBOT_TIP_TO_PEN_TIP = 130 (実測値は105だったが130でうまく動いている、キャンバスの厚さもこの定数に含まれている？)
         #self.ROBOT_TIP_TO_PEN_TIP = 105
-        self.ROBOT_TIP_TO_PEN_TIP = 118
+        self.ROBOT_TIP_TO_PEN_TIP = 117.5
 
         # mm
         # キャンバス厚さ
@@ -128,8 +140,8 @@ class CoordConfig:
 
         self.IMG_X = 200
         self.IMG_Y = 200
-        self.CANVAS_X = 150
-        self.CANVAS_Y = 150
+        self.CANVAS_X = 200
+        self.CANVAS_Y = 200
 
 
 if __name__ == "__main__":
