@@ -41,9 +41,17 @@ class ActionBundle:
         self.actions.start_job()
         self.actions.wait_job(job_len)
 
-    def get_brush_from_washer(self):
+    def get_brush_from_washer(self, brush_thickness):
+
+        washer_edge_inside = self.positions.w05
+        washer_edge_outside = self.positions.w06
+
+        if brush_thickness == "lg":
+            washer_edge_inside = self.positions.w05_large
+            washer_edge_outside = self.positions.w06_large
+
         self.actions.init_YAC()
-        job_len = self.actions.set_job_len(24)
+        job_len = self.actions.set_job_len(32)
         self.actions.set_speed(self.config.get_brush_speed, job_len)
         self.actions.set_smoothness(self.config.get_brush_smoothness, job_len)
         self.actions.go_to(0, self.positions.i00)
@@ -53,25 +61,38 @@ class ActionBundle:
         self.actions.go_to(4, self.positions.w02)
         self.actions.go_to(5, self.positions.w03)
         self.actions.go_to(6, self.positions.w02)
+
         self.actions.go_to(7, self.positions.w04)
-        self.actions.go_to(8, self.positions.w05)
-        self.actions.go_to(9, self.positions.w06)
+        self.actions.go_to(8, washer_edge_inside)
+        self.actions.go_to(9, washer_edge_outside)
         self.actions.go_to(10, self.positions.w07)
+
         self.actions.go_to(11, self.positions.w08)
-        self.actions.go_to(12, self.positions.w05)
-        self.actions.go_to(13, self.positions.w06)
+        self.actions.go_to(12, washer_edge_inside)
+        self.actions.go_to(13, washer_edge_outside)
         self.actions.go_to(14, self.positions.w07)
 
         self.actions.go_to(15, self.positions.w08)
-        self.actions.go_to(16, self.positions.w05)
-        self.actions.go_to(17, self.positions.w06)
+        self.actions.go_to(16, washer_edge_inside)
+        self.actions.go_to(17, washer_edge_outside)
         self.actions.go_to(18, self.positions.w07)
 
         self.actions.go_to(19, self.positions.w08)
-        self.actions.go_to(20, self.positions.w05)
-        self.actions.go_to(21, self.positions.w06)
+        self.actions.go_to(20, washer_edge_inside)
+        self.actions.go_to(21, washer_edge_outside)
         self.actions.go_to(22, self.positions.w07)
-        self.actions.go_to(23, self.positions.i00)
+
+        self.actions.go_to(23, self.positions.w08)
+        self.actions.go_to(24, washer_edge_inside)
+        self.actions.go_to(25, washer_edge_outside)
+        self.actions.go_to(26, self.positions.w07)
+
+        self.actions.go_to(27, self.positions.w08)
+        self.actions.go_to(28, washer_edge_inside)
+        self.actions.go_to(29, washer_edge_outside)
+        self.actions.go_to(30, self.positions.w07)
+
+        self.actions.go_to(31, self.positions.i00)
         self.actions.start_job()
         self.actions.wait_job(job_len)
 
@@ -149,9 +170,11 @@ class ActionBundle:
         self.arduino.color_mix(c, m, y, k, w)
         time.sleep(self.config.pallet_move_wait_time)
 
-    def wash_brush(self, current_brush_index, previous_brush_index):
+    def wash_brush(self, current_brush, previous_brush):
+        current_brush_index = current_brush.index
+        previous_brush_index  = previous_brush.index
         self.put_brush(current_brush_index)
-        self.get_brush_from_washer()
+        self.get_brush_from_washer(previous_brush.thickness)
         self.put_brush(previous_brush_index)
         self.get_brush(current_brush_index)
         self.put_brush(6)
@@ -175,17 +198,9 @@ class ActionBundle:
         job_len = self.actions.set_job_len(3)
         self.actions.set_speed(self.config.get_color_speed, job_len)
         self.actions.set_smoothness(self.config.get_color_smoothness, job_len)
-        self.actions.go_to(0, self.positions.i01)
-        self.actions.go_to(1, self.positions.p00)
-        self.actions.go_to(2, self.positions.p01)
-        self.actions.start_job()
-        self.__wait_moving(self.positions.p01)
-        time.sleep(1)
-
-        self.actions.refresh()
-        job_len = self.actions.set_job_len(1)
-        self.actions.set_speed(self.config.get_color_speed, job_len)
-        self.actions.go_to(0, self.positions.p02)
+        self.actions.go_to(0, self.positions.w04)
+        self.actions.go_to(1, self.positions.w05)
+        self.actions.go_to(2, self.positions.w06)
         self.actions.start_job()
         self.actions.wait_job(job_len)
 

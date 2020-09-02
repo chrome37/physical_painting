@@ -10,7 +10,7 @@ baudrate = 115200
 
 # sequence config
 stroke_file_path = "./stroke_test/horse_magic/stroke.csv"
-stroke_per_loop = 5
+stroke_per_loop = 3
 
 # brush selection config
 small_brush_boundary = 3

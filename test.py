@@ -30,4 +30,4 @@ if __name__ == "__main__":
     strokes = stroke_loader.load(config.stroke_file_path)
     r, g, b = strokes[0].get_color().get_rgb()
     action_bundle.initialize()
-    action_bundle.get_color()
+    action_bundle.get_brush_from_washer("sm")

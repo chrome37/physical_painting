@@ -79,6 +79,6 @@ if __name__ == "__main__":
             action_bundle.get_color()
             action_bundle.draw_strokes(target_strokes)
             action_bundle.pallet_clear()
-            action_bundle.wash_brush(current_brush.index, prev_brush.index)
+            action_bundle.wash_brush(current_brush, prev_brush)
             prev_brush = current_brush
 
