@@ -94,7 +94,7 @@ class StrokeColor:
         return (r * 255, g * 255, b * 255)
 
     def get_cmykw(self):
-        r, g, b = self.get_rgb()
+        r, g, b, a = self.get_rgba()
         k = min(1-r, 1-g, 1-b)
         w = min(r, g, b)
         if k == 1:
@@ -102,6 +102,16 @@ class StrokeColor:
         c = (1 - r - k)/(1-k)
         m = (1 - g - k)/(1-k)
         y = (1 - b - k)/(1-k)
+
+        return c, m, y, k, w
+
+    def get_cmy(self):
+        r, g, b = self.get_rgb()
+        c = 1 - r
+        m = 1 - g
+        y = 1 - b
+        k = 0
+        w = 0
 
         return c, m, y, k, w
 
@@ -129,7 +139,7 @@ class CoordConfig:
 
         # mm
         # キャンバス厚さ
-        self.CANVAS_THICKNESS = 9
+        self.CANVAS_THICKNESS = 8
 
         self.ROBOT_TIP_ROTATION = [-1050000, 0, 900000]
         #ROBOT_TIP_ROTATION = [-1050000, 0, 900000]

@@ -9,6 +9,7 @@ import modules.brush as brush
 import modules.utils.stroke_loader as stroke_loader
 import config
 import pty, os
+import time
 from tqdm import tqdm
 
 def make_action_bundle():
@@ -65,6 +66,7 @@ if __name__ == "__main__":
             action_bundle.pallet_clear()
             action_bundle.put_brush(6)
             prev_brush = current_brush
+            time.sleep(60)
         else :
             print(f"current_loop: {i}/{loop_num}")
             target_strokes = strokes[i * stroke_per_loop:(i + 1) * stroke_per_loop]
@@ -81,4 +83,5 @@ if __name__ == "__main__":
             action_bundle.pallet_clear()
             action_bundle.wash_brush(current_brush, prev_brush)
             prev_brush = current_brush
+            time.sleep(60)
 

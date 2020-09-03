@@ -29,7 +29,8 @@ def draw_world(strokes):
 
 if __name__ == "__main__":
     args = sys.argv
-    strokes = stroke_loader.load(args[1])
+    strokes = stroke_loader.load(args[1])[12:15]
+    print(strokes[0].get_color().get_cmy())
     for i in strokes[0].get_points():
         print(i.get_list())
 

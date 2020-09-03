@@ -196,11 +196,12 @@ class ActionBundle:
     def test(self):
         self.arduino.pallet_feed()
         self.actions.init_YAC()
-        job_len = self.actions.set_job_len(1)
+        job_len = self.actions.set_job_len(2)
         self.actions.set_speed(self.config.get_color_speed, job_len)
         self.actions.set_smoothness(self.config.get_color_smoothness, job_len)
 
-        self.actions.go_to(0, self.positions.i00)
+        self.actions.go_to(0, self.positions.w02)
+        self.actions.go_to(1, self.positions.w03)
 
         self.actions.start_job()
         self.actions.wait_job(job_len)

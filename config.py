@@ -9,10 +9,10 @@ serial_port = "/dev/cu.usbserial-1460"
 baudrate = 115200
 
 # sequence config
-stroke_file_path = "./stroke_test/brush_profile/sm.csv"
+stroke_file_path = "./stroke_test/banana/imgid3_stroke_out.csv"
 stroke_per_loop = 3
 
 # brush selection config
-small_brush_boundary = 3
+small_brush_boundary = 0
 large_brush_boundary = 6
 image_size = 20
