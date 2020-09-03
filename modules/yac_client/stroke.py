@@ -135,7 +135,8 @@ class CoordConfig:
         # mm
         # ROBOT_TIP_TO_PEN_TIP = 130 (実測値は105だったが130でうまく動いている、キャンバスの厚さもこの定数に含まれている？)
         #self.ROBOT_TIP_TO_PEN_TIP = 105
-        self.ROBOT_TIP_TO_PEN_TIP = 117.5
+        #減らすと近く
+        self.ROBOT_TIP_TO_PEN_TIP = 118
 
         # mm
         # キャンバス厚さ

@@ -21,7 +21,7 @@ class Client:
     def __cmyk_to_time(self, cmykw):
         total = sum(cmykw)
         standardized = [i/total for i in cmykw]
-        amount = 2
+        amount = 1.5
         speed = 2.5
         times = [int((i*amount/speed)*1000) for i in standardized]
         return times
@@ -75,6 +75,9 @@ class Client:
 
     def __del__(self):
         self.connection.close()
+
+    def color_test(self, n, time):
+        self.__execute(f"COLOR N{str(n)} T{str(time).zfill(4)}")
 
 if __name__ == "__main__":
     ports = list(serial.tools.list_ports.comports())

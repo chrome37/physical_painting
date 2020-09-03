@@ -28,7 +28,6 @@ if __name__ == "__main__":
 
     action_bundle, actions_template, arduino_client = make_action_bundle()
     strokes = stroke_loader.load(config.stroke_file_path)
-    color = strokes[13].get_color()
-    #color = stroke.StrokeColor(1, 99/255, 5/255, 1)
+    color = strokes[25].get_color()
     action_bundle.initialize()
-    action_bundle.make_color(color)
+    action_bundle.test()
