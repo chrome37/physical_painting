@@ -14,4 +14,4 @@ import time
 
 if __name__ == "__main__":
     arduino_client = arduino.Client(config.serial_port, config.baudrate, 1)
-    arduino_client.color_test(3, 9999)
+    arduino_client.fill_tube(9999)

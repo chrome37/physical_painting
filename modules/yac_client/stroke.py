@@ -24,7 +24,14 @@ class Stroke:
         self.points = [positions.RobotCoord(i[0], i[1], i[2], self.config.ROBOT_TIP_ROTATION[0],
                                             self.config.ROBOT_TIP_ROTATION[1], self.config.ROBOT_TIP_ROTATION[2], self.thickness) for i in points_world]
 
+        start_point = self.points[0]
+        start_point.x = -460123
 
+        end_point = self.points[-1]
+        end_point.x = -460123
+
+        self.points.insert(0, start_point)
+        self.points.append(end_point)
 
     def __bezier(self, x0, y0, x1, y1, x2, y2, z0, z2, t):
         x1 = x0 + (x2 - x0) * x1
@@ -48,7 +55,7 @@ class Stroke:
         c = [0, x_new, y_new]
         #  押し付け量の考慮
 
-        new_easel_canvas_offset = [self.config.EASEL_CANVAS_OFFSET[0] - z * z * 15, self.config.EASEL_CANVAS_OFFSET[1], self.config.EASEL_CANVAS_OFFSET[2]]
+        new_easel_canvas_offset = [self.config.EASEL_CANVAS_OFFSET[0] - z * 12, self.config.EASEL_CANVAS_OFFSET[1], self.config.EASEL_CANVAS_OFFSET[2]]
 
         return [int(i*1000) for i in self.config.EASEL_BASE_OFFSET + np.dot(new_easel_canvas_offset, R) + np.dot(c, R)]
 
@@ -136,7 +143,7 @@ class CoordConfig:
         # ROBOT_TIP_TO_PEN_TIP = 130 (実測値は105だったが130でうまく動いている、キャンバスの厚さもこの定数に含まれている？)
         #self.ROBOT_TIP_TO_PEN_TIP = 105
         #減らすと近く
-        self.ROBOT_TIP_TO_PEN_TIP = 118
+        self.ROBOT_TIP_TO_PEN_TIP = 132
 
         # mm
         # キャンバス厚さ

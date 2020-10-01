@@ -51,7 +51,7 @@ class ActionBundle:
             washer_edge_outside = self.positions.w06_large
 
         self.actions.init_YAC()
-        job_len = self.actions.set_job_len(6)
+        job_len = self.actions.set_job_len(7)
         self.actions.set_speed(self.config.get_brush_speed, job_len)
         self.actions.set_smoothness(self.config.get_brush_smoothness, job_len)
         self.actions.go_to(0, self.positions.i00)
@@ -60,6 +60,7 @@ class ActionBundle:
         self.actions.go_to(3, self.positions.w00)
         self.actions.go_to(4, self.positions.w02)
         self.actions.go_to(5, self.positions.w03)
+        self.actions.go_to(6, self.positions.w03_touch)
         self.actions.start_job()
         self.actions.wait_job(job_len)
 
@@ -77,27 +78,27 @@ class ActionBundle:
         self.actions.go_to(3, washer_edge_outside)
         self.actions.go_to(4, self.positions.w07)
 
-        self.actions.go_to(5, self.positions.w08)
+        self.actions.go_to(5, self.positions.w04)
         self.actions.go_to(6, washer_edge_inside)
         self.actions.go_to(7, washer_edge_outside)
         self.actions.go_to(8, self.positions.w07)
 
-        self.actions.go_to(9, self.positions.w08)
+        self.actions.go_to(9, self.positions.w04)
         self.actions.go_to(10, washer_edge_inside)
         self.actions.go_to(11, washer_edge_outside)
         self.actions.go_to(12, self.positions.w07)
 
-        self.actions.go_to(13, self.positions.w08)
+        self.actions.go_to(13, self.positions.w04)
         self.actions.go_to(14, washer_edge_inside)
         self.actions.go_to(15, washer_edge_outside)
         self.actions.go_to(16, self.positions.w07)
 
-        self.actions.go_to(17, self.positions.w08)
+        self.actions.go_to(17, self.positions.w04)
         self.actions.go_to(18, washer_edge_inside)
         self.actions.go_to(19, washer_edge_outside)
         self.actions.go_to(20, self.positions.w07)
 
-        self.actions.go_to(21, self.positions.w08)
+        self.actions.go_to(21, self.positions.w04)
         self.actions.go_to(22, washer_edge_inside)
         self.actions.go_to(23, washer_edge_outside)
         self.actions.go_to(24, self.positions.w07)
@@ -136,13 +137,14 @@ class ActionBundle:
     def get_color(self):
         self.arduino.pallet_feed()
         self.actions.init_YAC()
-        job_len = self.actions.set_job_len(4)
+        job_len = self.actions.set_job_len(5)
         self.actions.set_speed(self.config.get_color_speed, job_len)
         self.actions.set_smoothness(self.config.get_color_smoothness, job_len)
         self.actions.go_to(0, self.positions.i01)
-        self.actions.go_to(1, self.positions.p00)
-        self.actions.go_to(2, self.positions.p01)
-        self.actions.go_to(3, self.positions.p01_take)
+        self.actions.go_to(1, self.positions.i03)
+        self.actions.go_to(2, self.positions.p00)
+        self.actions.go_to(3, self.positions.p01)
+        self.actions.go_to(4, self.positions.p01_take)
         self.actions.start_job()
         self.__wait_moving(self.positions.p01_take)
         time.sleep(1)
@@ -204,7 +206,6 @@ class ActionBundle:
             self.actions.wait_job(job_len)
 
     def test(self):
-        self.arduino.pallet_feed()
         self.actions.init_YAC()
         job_len = self.actions.set_job_len(1)
         self.actions.set_speed(self.config.get_color_speed, job_len)
