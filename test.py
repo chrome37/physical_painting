@@ -29,4 +29,4 @@ if __name__ == "__main__":
     action_bundle, actions_template, arduino_client = make_action_bundle()
     strokes = stroke_loader.load("./stroke_test/brush_profile/lg_vertical.csv")
     action_bundle.initialize()
-    action_bundle.draw_strokes(strokes)
+    action_bundle.get_color()

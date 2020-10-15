@@ -144,21 +144,31 @@ class ActionBundle:
         self.actions.go_to(1, self.positions.i03)
         self.actions.go_to(2, self.positions.p00)
         self.actions.go_to(3, self.positions.p01)
-        self.actions.go_to(4, self.positions.p01_take)
+        self.actions.go_to(4, self.positions.p01_left)
         self.actions.start_job()
-        self.__wait_moving(self.positions.p01_take)
+        self.__wait_moving(self.positions.p01_left)
         time.sleep(1)
 
         self.actions.refresh()
-        job_len = self.actions.set_job_len(8)
-        self.actions.go_to(0, self.positions.p02)
-        self.actions.go_to(1, self.positions.p03)
-        self.actions.go_to(2, self.positions.p04)
-        self.actions.go_to(3, self.positions.p05)
-        self.actions.go_to(4, self.positions.p02)
-        self.actions.go_to(5, self.positions.p03)
-        self.actions.go_to(6, self.positions.p00)
-        self.actions.go_to(7, self.positions.i01)
+        job_len = self.actions.set_job_len(2)
+        self.actions.go_to(0, self.positions.p01)
+        self.actions.go_to(1, self.positions.p01_right)
+        self.actions.start_job()
+        self.__wait_moving(self.positions.p01_right)
+        time.sleep(1)
+
+        self.actions.refresh()
+        job_len = self.actions.set_job_len(10)
+        self.actions.go_to(0, self.positions.p01)
+        self.actions.go_to(1, self.positions.p02)
+        self.actions.go_to(2, self.positions.p03)
+        self.actions.go_to(3, self.positions.p04)
+        self.actions.go_to(4, self.positions.p05)
+        self.actions.go_to(5, self.positions.p02)
+        self.actions.go_to(6, self.positions.p03)
+        self.actions.go_to(7, self.positions.p00)
+        self.actions.go_to(8, self.positions.i03)
+        self.actions.go_to(9, self.positions.i01)
         self.actions.start_job()
         self.actions.wait_job(job_len)
 
@@ -206,12 +216,13 @@ class ActionBundle:
             self.actions.wait_job(job_len)
 
     def test(self):
+        self.arduino.pallet_feed()
         self.actions.init_YAC()
         job_len = self.actions.set_job_len(1)
         self.actions.set_speed(self.config.get_color_speed, job_len)
         self.actions.set_smoothness(self.config.get_color_smoothness, job_len)
 
-        self.actions.go_to(0, self.positions.i01)
+        self.actions.go_to(0, self.positions.p01)
 
         self.actions.start_job()
         self.actions.wait_job(job_len)
@@ -226,7 +237,7 @@ class ActionBundleConfig:
         self.put_brush_smoothness = 0
 
         self.draw_strokes_speed = 2500
-        self.draw_strokes_smoothness = 5
+        self.draw_strokes_smoothness = 3
 
         self.get_color_speed = 2500
         self.get_color_smoothness = 0

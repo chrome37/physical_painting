@@ -65,7 +65,7 @@ class Client:
         self.__pallet(155)
 
     def pallet_feed(self):
-        self.__pallet(70)
+        self.__pallet(50)
 
     def pallet_receive(self):
         self.__pallet(10)

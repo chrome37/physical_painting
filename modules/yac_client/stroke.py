@@ -26,9 +26,11 @@ class Stroke:
 
         start_point = self.points[0]
         start_point.x = -460123
+        self.start_point = start_point
 
         end_point = self.points[-1]
         end_point.x = -460123
+        self.end_point = end_point
 
         self.points.insert(0, start_point)
         self.points.append(end_point)
@@ -55,9 +57,23 @@ class Stroke:
         c = [0, x_new, y_new]
         #  押し付け量の考慮
 
-        new_easel_canvas_offset = [self.config.EASEL_CANVAS_OFFSET[0] - z * 12, self.config.EASEL_CANVAS_OFFSET[1], self.config.EASEL_CANVAS_OFFSET[2]]
+        new_easel_canvas_offset = [self.config.EASEL_CANVAS_OFFSET[0] - self.__thickness_to_press_regression(z), self.config.EASEL_CANVAS_OFFSET[1], self.config.EASEL_CANVAS_OFFSET[2]]
 
         return [int(i*1000) for i in self.config.EASEL_BASE_OFFSET + np.dot(new_easel_canvas_offset, R) + np.dot(c, R)]
+
+    def __thickness_to_press_regression(self, thickness_degree):
+        a = 0.981900452
+        b = 0.007692308
+        max_press = 17
+        result = min(max_press, (thickness_degree * self.config.IMG_X / 10 - b) / a)
+        return result
+
+    def __thickness_to_press_table_search(self, thickness_degree):
+        z_step = []
+        y = []
+        for i in range(25):
+            z_step.append(i*0.04)
+        return thickness_degree * 12
 
     def get_points(self):
         return self.points
@@ -143,7 +159,8 @@ class CoordConfig:
         # ROBOT_TIP_TO_PEN_TIP = 130 (実測値は105だったが130でうまく動いている、キャンバスの厚さもこの定数に含まれている？)
         #self.ROBOT_TIP_TO_PEN_TIP = 105
         #減らすと近く
-        self.ROBOT_TIP_TO_PEN_TIP = 132
+        #紙一枚減らすと1減らす(大体)
+        self.ROBOT_TIP_TO_PEN_TIP = 130
 
         # mm
         # キャンバス厚さ
@@ -160,10 +177,3 @@ class CoordConfig:
         self.IMG_Y = 200
         self.CANVAS_X = 200
         self.CANVAS_Y = 200
-
-
-if __name__ == "__main__":
-    stroke = Stroke(0.13449928, 0.47401235, 0.98125505, 0.8168494,
-                    0.15215716, 0.45815855, 1.0, 1.0, 0.8443417, 0.8312879, 0.7027973, 0.40457433)
-    for i in stroke.points:
-        print(i.get_list())
