@@ -2,6 +2,7 @@ import numpy as np
 import os
 from natsort import natsorted
 from . import positions
+import math
 
 
 class Stroke:
@@ -9,8 +10,8 @@ class Stroke:
         self.config = CoordConfig()
         self.color = StrokeColor(r, g, b, a)
         self.thickness = (z0 + z2) * 0.5
-        point_num = 20
-        t_array = np.arange(0, 1, 1/point_num)
+        point_num = 50
+        t_array = np.arange(0, 1 + 1/point_num, 1/point_num)
         points_disp = []
         for t in t_array:
             points_disp.append(self.__bezier(
@@ -66,7 +67,8 @@ class Stroke:
         b = 0.007692308
         max_press = 17
         result = min(max_press, (thickness_degree * self.config.IMG_X / 10 - b) / a)
-        return result
+        #線画OpenCVの結果より明らかに太いため調整している
+        return result * 0.6
 
     def __thickness_to_press_table_search(self, thickness_degree):
         z_step = []
@@ -121,10 +123,12 @@ class StrokeColor:
         k = min(1-r, 1-g, 1-b)
         w = min(r, g, b)
         if k == 1:
-            cmykw = [0, 0, 0, 1, 0]
-        c = (1 - r - k)/(1-k)
-        m = (1 - g - k)/(1-k)
-        y = (1 - b - k)/(1-k)
+            c = m = y = w = 0
+            k = 1
+        else :
+            c = (1 - r - k)/(1-k)
+            m = (1 - g - k)/(1-k)
+            y = (1 - b - k)/(1-k)
 
         return c, m, y, k, w
 
@@ -145,7 +149,7 @@ class CoordConfig:
     def __init__(self):
         # the angle of painter easel
         # -15 degree
-        self.EASEL_ANG = -np.pi / 12
+        self.EASEL_ANG = -1 * math.radians(16)
 
         # mm
         #EASEL_LENGTH = 1000
@@ -160,7 +164,8 @@ class CoordConfig:
         #self.ROBOT_TIP_TO_PEN_TIP = 105
         #減らすと近く
         #紙一枚減らすと1減らす(大体)
-        self.ROBOT_TIP_TO_PEN_TIP = 130
+        #self.ROBOT_TIP_TO_PEN_TIP = 127
+        self.ROBOT_TIP_TO_PEN_TIP = 142
 
         # mm
         # キャンバス厚さ

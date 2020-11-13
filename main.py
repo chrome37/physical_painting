@@ -66,7 +66,7 @@ if __name__ == "__main__":
             action_bundle.pallet_clear()
             action_bundle.put_brush(6)
             prev_brush = current_brush
-            time.sleep(180)
+            time.sleep(120)
         else :
             print(f"current_loop: {i}/{loop_num}")
             target_strokes = strokes[i * stroke_per_loop:(i + 1) * stroke_per_loop]

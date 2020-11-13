@@ -21,7 +21,7 @@ class Client:
     def __cmyk_to_time(self, cmykw):
         total = sum(cmykw)
         standardized = [i/total for i in cmykw]
-        amount = 1.5
+        amount = 2
         speed = 2.5
         times = [int((i*amount/speed)*1000) for i in standardized]
         return times

@@ -151,6 +151,8 @@ class ActionBundle:
 
         self.actions.refresh()
         job_len = self.actions.set_job_len(2)
+        self.actions.set_speed(self.config.get_color_speed, job_len)
+        self.actions.set_smoothness(self.config.get_color_smoothness, job_len)
         self.actions.go_to(0, self.positions.p01)
         self.actions.go_to(1, self.positions.p01_right)
         self.actions.start_job()
@@ -159,6 +161,8 @@ class ActionBundle:
 
         self.actions.refresh()
         job_len = self.actions.set_job_len(10)
+        self.actions.set_speed(self.config.get_color_speed, job_len)
+        self.actions.set_smoothness(self.config.get_color_smoothness, job_len)
         self.actions.go_to(0, self.positions.p01)
         self.actions.go_to(1, self.positions.p02)
         self.actions.go_to(2, self.positions.p03)
@@ -236,7 +240,7 @@ class ActionBundleConfig:
         self.put_brush_speed = 2500
         self.put_brush_smoothness = 0
 
-        self.draw_strokes_speed = 2500
+        self.draw_strokes_speed = 500
         self.draw_strokes_smoothness = 3
 
         self.get_color_speed = 2500

@@ -8,9 +8,11 @@ def draw_disp(strokes):
     for stroke in strokes:
         x = [i[0] for i in stroke.get_points_disp()]
         y = [i[1] for i in stroke.get_points_disp()]
+        plt.xlim(0, 1)
+        plt.ylim(0, 1)
         color = stroke.get_color()
         r, g, b = color.get_rgb()
-        plt.plot(x, y, linewidth=stroke.get_thickness() * 20, color=[r, g, b])
+        plt.plot(x, y, linewidth=stroke.thickness*20, color=[r, g, b])
 
     plt.show()
 
@@ -23,7 +25,7 @@ def draw_world(strokes):
         z = [i[2] for i in stroke.get_points_world()]
         color = stroke.get_color()
         r,g,b,a = color.get_rgba()
-        ax.plot(x, y, z, linewidth=stroke.thickness*20, color=[r, g, b, a])
+        ax.plot(x, y, z, linewidth=1, color=[r, g, b, a])
 
     plt.show()
 
