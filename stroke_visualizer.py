@@ -12,7 +12,7 @@ def draw_disp(strokes):
         plt.ylim(0, 1)
         color = stroke.get_color()
         r, g, b = color.get_rgb()
-        plt.plot(x, y, linewidth=stroke.thickness*20, color=[r, g, b])
+        plt.plot(x, y, linewidth=10, color=[r, g, b])
 
     plt.show()
 

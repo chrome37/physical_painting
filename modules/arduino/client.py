@@ -76,8 +76,37 @@ class Client:
     def __del__(self):
         self.connection.close()
 
-    def color_test(self, n, time):
-        self.__execute(f"COLOR N{str(n)} T{str(time).zfill(4)}")
+
+class ColorDeviceClient:
+    def __init__(self, port, bps, timeout = 1):
+        self.connection = serial.Serial(port, bps, timeout=timeout)
+        line = True
+        while line:
+            line = self.connection.readline()
+            print(line)
+
+    def __execute(self, command):
+        print(command)
+        flag = bytes(command+"\n", "UTF-8")
+        self.connection.write(flag)
+        print(self.connection.readline())
+
+    def motor_move(self, n, step, forward):
+        char = "F" if forward else "B"
+        command_string = f"COLOR N{str(n)} S{str(step).zfill(4)} {char}"
+        self.__execute(command_string)
+
+    def color_mix(self, c, m, y, k, w):
+        amount = 2
+        step_per_volume = 300
+        cmykw = [c, m, y, k, w]
+        total = sum(cmykw)
+        standardized = [i/total for i in cmykw]
+        steps = [str(int(i*amount*step_per_volume)) for i in standardized]
+        command_string = f"COLOR C{steps[0].zfill(4)} M{steps[1].zfill(4)} Y{steps[2].zfill(4)} F"
+        self.__execute(command_string)
+
+
 
 if __name__ == "__main__":
     ports = list(serial.tools.list_ports.comports())

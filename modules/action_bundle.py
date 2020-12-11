@@ -1,9 +1,10 @@
 import time
 class ActionBundle:
-    def __init__(self, actions_template, arduino_client, positions):
+    def __init__(self, actions_template, arduino_client, color_device_client, positions):
         self.config = ActionBundleConfig()
         self.actions = actions_template
         self.arduino = arduino_client
+        self.color_device = color_device_client
         self.positions = positions
         self.holder_index_map = [
             [self.positions.b00, self.positions.b01],
@@ -191,10 +192,10 @@ class ActionBundle:
 
 
     def make_color(self, color):
-        c, m, y, k, w = color.get_cmykw()
+        c, m, y, k, w = color.get_cmykw() #k, wが出ないのでいったんcmyで
         self.arduino.pallet_receive()
         time.sleep(self.config.pallet_move_wait_time)
-        self.arduino.color_mix(c, m, y, k, w)
+        self.color_device.color_mix(c, m, y, k, w)
         time.sleep(self.config.pallet_move_wait_time)
 
     def wash_brush(self, current_brush, previous_brush):
@@ -216,6 +217,26 @@ class ActionBundle:
             self.actions.go_to(0, self.positions.i01)
             self.actions.draw_stroke(1, stroke)
             self.actions.go_to(points_num + 1, self.positions.i01)
+            self.actions.start_job()
+            self.actions.wait_job(job_len)
+
+            self.actions.init_YAC()
+            job_len = self.actions.set_job_len(13)
+            self.actions.set_speed(self.config.get_color_speed, job_len)
+            self.actions.set_smoothness(self.config.get_color_smoothness, job_len)
+            self.actions.go_to(0, self.positions.i03)
+            self.actions.go_to(1, self.positions.p00)
+            self.actions.go_to(2, self.positions.p02)
+            self.actions.go_to(3, self.positions.p03)
+            self.actions.go_to(4, self.positions.p04)
+            self.actions.go_to(5, self.positions.p05)
+            self.actions.go_to(6, self.positions.p02)
+            self.actions.go_to(7, self.positions.p03)
+            self.actions.go_to(8, self.positions.p04)
+            self.actions.go_to(9, self.positions.p05)
+            self.actions.go_to(10, self.positions.p00)
+            self.actions.go_to(11, self.positions.i03)
+            self.actions.go_to(12, self.positions.i01)
             self.actions.start_job()
             self.actions.wait_job(job_len)
 

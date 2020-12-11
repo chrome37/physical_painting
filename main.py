@@ -19,10 +19,11 @@ def make_action_bundle():
     actions_template = actions.Templates(requests_template)
 
     arduino_client = arduino.Client(config.serial_port, config.baudrate, 1)
+    color_device_client = arduino.ColorDeviceClient("/dev/cu.usbmodem14301", 9600, 5)
 
     defined_positions = positions.DefinedPositions()
 
-    return action_bundle.ActionBundle(actions_template, arduino_client, defined_positions)
+    return action_bundle.ActionBundle(actions_template, arduino_client, color_device_client ,defined_positions)
 
 def brush_select(prev_brush, target_strokes):
     stroke_thickness = max([i.get_thickness() for i in target_strokes]) * config.image_size
@@ -66,7 +67,7 @@ if __name__ == "__main__":
             action_bundle.pallet_clear()
             action_bundle.put_brush(6)
             prev_brush = current_brush
-            time.sleep(120)
+            time.sleep(config.sleep_time)
         else :
             print(f"current_loop: {i}/{loop_num}")
             target_strokes = strokes[i * stroke_per_loop:(i + 1) * stroke_per_loop]
@@ -83,5 +84,5 @@ if __name__ == "__main__":
             action_bundle.pallet_clear()
             action_bundle.wash_brush(current_brush, prev_brush)
             prev_brush = current_brush
-            time.sleep(180)
+            time.sleep(config.sleep_time)
 
