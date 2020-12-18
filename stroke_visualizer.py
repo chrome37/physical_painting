@@ -32,6 +32,7 @@ def draw_world(strokes):
 if __name__ == "__main__":
     args = sys.argv
     strokes = stroke_loader.load(args[1])
+    print(strokes)
     if args[2] == "--disp":
         draw_disp(strokes)
     elif args[2] == "--world":

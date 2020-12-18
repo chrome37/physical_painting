@@ -158,7 +158,7 @@ class CoordConfig:
 
         # mm
         self.EASEL_THICKNESS = 11
-        self.CANVAS_MERGIN_BUTTON = 25
+        self.CANVAS_MERGIN_BUTTON = 50
 
         # mm
         # ROBOT_TIP_TO_PEN_TIP = 130 (実測値は105だったが130でうまく動いている、キャンバスの厚さもこの定数に含まれている？)
@@ -166,7 +166,7 @@ class CoordConfig:
         #減らすと近く
         #紙一枚減らすと1減らす(大体)
         #self.ROBOT_TIP_TO_PEN_TIP = 127
-        self.ROBOT_TIP_TO_PEN_TIP = 144
+        self.ROBOT_TIP_TO_PEN_TIP = 142
 
         # mm
         # キャンバス厚さ

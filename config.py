@@ -8,6 +8,10 @@ dest_port=10040
 serial_port = "/dev/cu.usbserial-1460"
 baudrate = 115200
 
+# color_device connection config
+serial_port_2 = "/dev/cu.usbmodem14301"
+baudrate_2 = 9600
+
 # sequence config
 stroke_file_path = "./stroke_test/tree_flog_static/imgid2_stroke_out.csv"
 stroke_per_loop = 3

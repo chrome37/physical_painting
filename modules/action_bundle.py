@@ -182,13 +182,23 @@ class ActionBundle:
         time.sleep(self.config.pallet_move_wait_time)
         self.arduino.pallet_receive()
         time.sleep(self.config.pallet_move_wait_time)
-        '''
-        self.arduino.wash_pallet(self.config.wash_pallet_time)
-        time.sleep(5)
+        self.arduino.wash_pallet_with_water(self.config.wash_pallet_time)
+        time.sleep(self.config.pallet_move_wait_time)
         self.arduino.pallet_dispose()
         time.sleep(self.config.pallet_move_wait_time)
         self.arduino.pallet_receive()
-        '''
+        time.sleep(self.config.pallet_move_wait_time)
+        self.arduino.wash_pallet_with_cleanser(self.config.wash_pallet_time)
+        time.sleep(self.config.pallet_move_wait_time)
+        self.arduino.pallet_dispose()
+        time.sleep(self.config.pallet_move_wait_time)
+        self.arduino.pallet_receive()
+        time.sleep(self.config.pallet_move_wait_time)
+        self.arduino.wash_pallet_with_water(self.config.wash_pallet_time)
+        time.sleep(self.config.pallet_move_wait_time)
+        self.arduino.pallet_dispose()
+        time.sleep(self.config.pallet_move_wait_time)
+        self.arduino.pallet_receive()
 
 
     def make_color(self, color):
@@ -220,6 +230,8 @@ class ActionBundle:
             self.actions.start_job()
             self.actions.wait_job(job_len)
 
+            #毎回筆を整える
+            '''
             self.actions.init_YAC()
             job_len = self.actions.set_job_len(13)
             self.actions.set_speed(self.config.get_color_speed, job_len)
@@ -239,15 +251,15 @@ class ActionBundle:
             self.actions.go_to(12, self.positions.i01)
             self.actions.start_job()
             self.actions.wait_job(job_len)
+            '''
 
-    def test(self):
-        self.arduino.pallet_feed()
+    def go_to_position(self, position):
         self.actions.init_YAC()
         job_len = self.actions.set_job_len(1)
         self.actions.set_speed(self.config.get_color_speed, job_len)
         self.actions.set_smoothness(self.config.get_color_smoothness, job_len)
 
-        self.actions.go_to(0, self.positions.p01)
+        self.actions.go_to(0, position)
 
         self.actions.start_job()
         self.actions.wait_job(job_len)
@@ -268,5 +280,5 @@ class ActionBundleConfig:
         self.get_color_smoothness = 0
 
         self.tool_detach_time = 3000
-        self.wash_pallet_time = 2000
+        self.wash_pallet_time = 3000
         self.pallet_move_wait_time = 5

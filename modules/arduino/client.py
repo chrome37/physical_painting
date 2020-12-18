@@ -39,8 +39,12 @@ class Client:
             command_string = f"COLOR N{str(i)} T{str(time)}"
             self.__execute(command_string)
 
-    def wash_pallet(self, time):
-        command_string = f"COLOR N4 T{str(time)}"
+    def wash_pallet_with_water(self, time):
+        command_string = f"COLOR N0 T{str(time).zfill(4)}"
+        self.__execute(command_string)
+
+    def wash_pallet_with_cleanser(self, time):
+        command_string = f"COLOR N1 T{str(time).zfill(4)}"
         self.__execute(command_string)
 
 
@@ -91,11 +95,6 @@ class ColorDeviceClient:
         self.connection.write(flag)
         print(self.connection.readline())
 
-    def motor_move(self, n, step, forward):
-        char = "F" if forward else "B"
-        command_string = f"COLOR N{str(n)} S{str(step).zfill(4)} {char}"
-        self.__execute(command_string)
-
     def color_mix(self, c, m, y, k, w):
         amount = 2
         step_per_volume = 300
@@ -103,7 +102,7 @@ class ColorDeviceClient:
         total = sum(cmykw)
         standardized = [i/total for i in cmykw]
         steps = [str(int(i*amount*step_per_volume)) for i in standardized]
-        command_string = f"COLOR C{steps[0].zfill(4)} M{steps[1].zfill(4)} Y{steps[2].zfill(4)} F"
+        command_string = f"COLOR C{steps[0].zfill(4)} M{steps[1].zfill(4)} Y{steps[2].zfill(4)} K{steps[3].zfill(4)} F"
         self.__execute(command_string)
 
 
