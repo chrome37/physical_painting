@@ -19,7 +19,7 @@ def make_action_bundle():
     actions_template = actions.Templates(requests_template)
 
     arduino_client = arduino.Client(config.serial_port, config.baudrate, 1)
-    color_device_client = arduino.ColorDeviceClient("/dev/cu.usbmodem14301", 9600, 5)
+    color_device_client = arduino.ColorDeviceClient(config.serial_port_2, config.baudrate_2, 5)
 
     defined_positions = positions.DefinedPositions()
 

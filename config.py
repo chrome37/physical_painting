@@ -9,7 +9,7 @@ serial_port = "/dev/cu.usbserial-1460"
 baudrate = 115200
 
 # color_device connection config
-serial_port_2 = "/dev/cu.usbmodem14301"
+serial_port_2 = "/dev/cu.usbmodem143101"
 baudrate_2 = 9600
 
 # sequence config
@@ -22,4 +22,4 @@ large_brush_boundary = 0
 image_size = 20
 
 #sec
-sleep_time = 60
+sleep_time = 30

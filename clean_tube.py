@@ -18,6 +18,6 @@ if __name__ == "__main__":
     arduino_client = arduino.Client(config.serial_port, config.baudrate, 1)
 
     arduino_client.pallet_receive()
-    time.sleep(3)
-    arduino_client.fill_tube(9999)
+    time.sleep(5)
+    arduino_client.fill_tube(3000)
     arduino_client.pallet_dispose()

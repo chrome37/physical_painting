@@ -102,7 +102,7 @@ class ColorDeviceClient:
         total = sum(cmykw)
         standardized = [i/total for i in cmykw]
         steps = [str(int(i*amount*step_per_volume)) for i in standardized]
-        command_string = f"COLOR C{steps[0].zfill(4)} M{steps[1].zfill(4)} Y{steps[2].zfill(4)} K{steps[3].zfill(4)} F"
+        command_string = f"COLOR C{steps[0].zfill(4)} M{steps[1].zfill(4)} Y{steps[2].zfill(4)} K{steps[3].zfill(4)} W{steps[4].zfill(4)} F"
         self.__execute(command_string)
 
 

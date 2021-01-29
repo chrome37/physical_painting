@@ -188,7 +188,7 @@ class ActionBundle:
         time.sleep(self.config.pallet_move_wait_time)
         self.arduino.pallet_receive()
         time.sleep(self.config.pallet_move_wait_time)
-        self.arduino.wash_pallet_with_cleanser(self.config.wash_pallet_time)
+        self.arduino.wash_pallet_with_water(self.config.wash_pallet_time)
         time.sleep(self.config.pallet_move_wait_time)
         self.arduino.pallet_dispose()
         time.sleep(self.config.pallet_move_wait_time)
@@ -280,5 +280,5 @@ class ActionBundleConfig:
         self.get_color_smoothness = 0
 
         self.tool_detach_time = 3000
-        self.wash_pallet_time = 3000
+        self.wash_pallet_time = 5000
         self.pallet_move_wait_time = 5
