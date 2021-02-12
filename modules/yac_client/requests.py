@@ -100,7 +100,7 @@ class Templates():
         self._base_request(data_size, command, data_index, request_num, compute, payload)
 
     def set_speed(self, speed, set_range=10):
-        print('set speed:', speed)
+        #print('set speed:', speed)
 
         for count in range(set_range):
             data_size = "<02><00>"      # dynamic (fixed: 2 byte for speed)
@@ -119,7 +119,7 @@ class Templates():
 
             self._base_request(data_size, command, data_index, request_num, compute, data)
 
-        print('set speed done')
+        #print('set speed done')
 
     def set_smoothness_level(self, value, set_range):
         for count in range(set_range):

@@ -27,7 +27,7 @@ class Templates():
             return 'error'
 
     def _set_position(self, position, index):
-        print(f"set position: {position.get_list()}")
+        #print(f"set position: {position.get_list()}")
         v = np.array(position.get_list()).astype(np.int64)
         self.requests.set_position(self._to_ascii(np.int64(index), 2),
                 self._to_ascii(v[0], 4), self._to_ascii(v[1], 4),

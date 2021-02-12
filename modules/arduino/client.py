@@ -44,7 +44,7 @@ class Client:
         self.__execute(command_string)
 
     def wash_pallet_with_cleanser(self, time):
-        command_string = f"COLOR N1 T{str(time).zfill(4)}"
+        command_string = f"COLOR N3 T{str(time).zfill(4)}"
         self.__execute(command_string)
 
 
