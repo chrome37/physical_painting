@@ -47,7 +47,7 @@ class Templates():
     def draw_stroke(self, start_index, stroke):
         points = stroke.get_points()
         for i in range(len(points)):
-            print(f"drawing stroke index: {i}")
+            #print(f"drawing stroke index: {i}")
             self._set_position(points[i], start_index + i)
 
     def go_to(self, index, position):

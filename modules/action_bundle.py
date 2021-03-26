@@ -220,7 +220,7 @@ class ActionBundle:
         self.arduino.pallet_receive()
         time.sleep(self.config.pallet_move_wait_time)
         self.color_device.color_mix(c, m, y, k, w)
-        time.sleep(self.config.pallet_move_wait_time)
+        time.sleep(20)
 
     def wash_brush(self, current_brush, previous_brush):
         current_brush_index = current_brush.index

@@ -13,10 +13,10 @@ class Client:
             print(line)
 
     def __execute(self, command):
-        print(command)
+        #print(command)
         flag = bytes(command+"\n", "UTF-8")
         self.connection.write(flag)
-        print(self.connection.readline())
+        #print(self.connection.readline())
 
     def __cmyk_to_time(self, cmykw):
         total = sum(cmykw)
@@ -72,7 +72,7 @@ class Client:
         self.__pallet(50)
 
     def pallet_receive(self):
-        self.__pallet(10)
+        self.__pallet(35)
 
     def close(self):
         self.connection.close()
@@ -97,7 +97,7 @@ class ColorDeviceClient:
 
     def color_mix(self, c, m, y, k, w):
         amount = 2
-        step_per_volume = 300
+        step_per_volume = 600
         cmykw = [c, m, y, k, w]
         total = sum(cmykw)
         standardized = [i/total for i in cmykw]

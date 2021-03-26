@@ -27,14 +27,40 @@ class Stroke:
                                             self.config.ROBOT_TIP_ROTATION[1], self.config.ROBOT_TIP_ROTATION[2], self.thickness) for i in points_world]
 
         start_point = copy.copy(self.points[0])
+        vec = [self.points[1].y - self.points[0].y, self.points[1].z - self.points[0].z]
+        vec_size = math.sqrt(vec[0]**2 + vec[1]**2)
+        vec_standard = [i/vec_size for i in vec]
+        start_point.y -= vec_standard[0] * z0 * self.config.IMG_X * self.config.THICKNESS_FACTOR * 2
+        start_point.z -= vec_standard[1] * z0 * self.config.IMG_X * self.config.THICKNESS_FACTOR * 2
         start_point.x = -460123
         self.start_point = start_point
 
+        start_point2 = copy.copy(self.points[0])
+        vec2 = [self.points[1].y - self.points[0].y, self.points[1].z - self.points[0].z]
+        vec2_size = math.sqrt(vec2[0]**2 + vec2[1]**2)
+        vec2_standard = [i/vec2_size for i in vec2]
+        start_point2.y -= vec2_standard[0] * z0 * self.config.IMG_X * self.config.THICKNESS_FACTOR
+        start_point2.z -= vec2_standard[1] * z0 * self.config.IMG_X * self.config.THICKNESS_FACTOR
+
+        '''
         end_point = copy.copy(self.points[-1])
         end_point.x = -460123
         self.end_point = end_point
+        '''
+
+        end_point2 = copy.copy(self.points[-1])
+        vec3 = [self.points[-2].y - self.points[-1].y, self.points[-2].z - self.points[-1].z]
+        vec3_size = math.sqrt(vec3[0]**2 + vec3[1]**2)
+        vec3_standard = [i/vec3_size for i in vec3]
+        end_point2.y += vec3_standard[0] * z2 * self.config.IMG_X * self.config.THICKNESS_FACTOR
+        end_point2.z += vec3_standard[1] * z2 * self.config.IMG_X * self.config.THICKNESS_FACTOR
+
+        end_point = copy.copy(end_point2)
+        end_point.x = -460123
 
         self.points.insert(0, start_point)
+        self.points.insert(1, start_point2)
+        self.points.append(end_point2)
         self.points.append(end_point)
 
     def __bezier(self, x0, y0, x1, y1, x2, y2, z0, z2, t):
@@ -69,7 +95,7 @@ class Stroke:
         max_press = 17
         result = min(max_press, (thickness_degree * self.config.IMG_X / 10 - b) / a)
         #線画OpenCVの結果より明らかに太いため調整している
-        return result * 0.6
+        return result * self.config.THICKNESS_FACTOR
 
     def __thickness_to_press_table_search(self, thickness_degree):
         z_step = []
@@ -183,3 +209,5 @@ class CoordConfig:
         self.IMG_Y = 200
         self.CANVAS_X = 200
         self.CANVAS_Y = 200
+
+        self.THICKNESS_FACTOR = 0.6

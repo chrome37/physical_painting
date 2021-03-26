@@ -13,8 +13,10 @@ if __name__ == "__main__":
     w = sum([i[4] for i in colors])
 
     color_amount = 2
-    sequence_count = 15
+    sequence_count = 10
 
     total = c + m + y + k + w
     c, m, y, k, w = [color_amount * sequence_count * i / total for i in [c, m, y, k, w]]
     print(f'c:{int(c)} m:{int(m)} y:{int(y)} k:{int(k)} w:{int(w)}')
+
+    water_rates = [3/4, 5/6, 3/4, 6/7, 3/4]
