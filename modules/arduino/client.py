@@ -18,26 +18,6 @@ class Client:
         self.connection.write(flag)
         #print(self.connection.readline())
 
-    def __cmyk_to_time(self, cmykw):
-        total = sum(cmykw)
-        standardized = [i/total for i in cmykw]
-        amount = 2
-        speed = 2.5
-        times = [int((i*amount/speed)*1000) for i in standardized]
-        return times
-
-    def color_mix(self, c, m, y, k, w):
-        cmykw = [c, m, y, k, w]
-        times = self.__cmyk_to_time(cmykw)
-
-        for i in range(len(times)):
-            command_string = f"COLOR N{str(i)} T{str(times[i]).zfill(4)}"
-            self.__execute(command_string)
-
-    def fill_tube(self, time):
-        for i in range(5):
-            command_string = f"COLOR N{str(i)} T{str(time)}"
-            self.__execute(command_string)
 
     def wash_pallet_with_water(self, time):
         command_string = f"COLOR N0 T{str(time).zfill(4)}"
@@ -96,7 +76,7 @@ class ColorDeviceClient:
         print(self.connection.readline())
 
     def color_mix(self, c, m, y, k, w):
-        amount = 2
+        amount = 0.75
         step_per_volume = 600
         cmykw = [c, m, y, k, w]
         total = sum(cmykw)
@@ -104,6 +84,9 @@ class ColorDeviceClient:
         steps = [str(int(i*amount*step_per_volume)) for i in standardized]
         command_string = f"COLOR C{steps[0].zfill(4)} M{steps[1].zfill(4)} Y{steps[2].zfill(4)} K{steps[3].zfill(4)} W{steps[4].zfill(4)} F"
         self.__execute(command_string)
+
+    def __del__(self):
+        self.connection.close()
 
 
 

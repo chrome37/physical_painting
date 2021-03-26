@@ -17,6 +17,45 @@ class Stroke:
         for t in t_array:
             points_disp.append(self.__bezier(
                 x0, y0, x1, y1, x2, y2, z0, z2, t))
+
+        start_point2 = list(copy.copy(points_disp[0]))
+        vec2  = [points_disp[1][0] - points_disp[0][0], points_disp[1][1] - points_disp[0][1]]
+        vec2_standard  =self.__vec_standardize(vec2)
+        #0.1:キャンバスに対するストローク太さひ比率が0.1だから, 0.5:直径を半径に
+        start_point2[0] -= vec2_standard[0] * z0 * self.config.THICKNESS_FACTOR * 0.1 * 0.5
+        start_point2[0] = self.__cut_off(start_point2[0])
+        start_point2[1] -= vec2_standard[1] * z0 * self.config.THICKNESS_FACTOR * 0.1 * 0.5
+        start_point2[1] = self.__cut_off(start_point2[1])
+
+        #空間変換後に手前に引く点
+        start_point1 = list(copy.copy(points_disp[0]))
+        start_point1[0] -= vec2_standard[0] * z0 * self.config.THICKNESS_FACTOR * 0.1 * 0.5 * 4
+        start_point1[0] = self.__cut_off(start_point1[0])
+        start_point1[1] -= vec2_standard[1] * z0 * self.config.THICKNESS_FACTOR * 0.1 * 0.5 * 4
+        start_point1[1] = self.__cut_off(start_point1[1])
+
+        points_disp.insert(0, tuple(start_point2))
+        points_disp.insert(0, tuple(start_point1))
+
+        end_point2 = list(copy.copy(points_disp[-1]))
+        vec3 = [points_disp[-1][0] - points_disp[-2][0], points_disp[-1][1] - points_disp[-2][1]]
+        vec3_standard = self.__vec_standardize(vec3)
+        end_point2[0] += vec3_standard[0] * z0 * self.config.THICKNESS_FACTOR * 0.1 * 0.5
+        end_point2[0] = self.__cut_off(end_point2[0])
+        end_point2[1] += vec3_standard[1] * z0 * self.config.THICKNESS_FACTOR * 0.1 * 0.5
+        end_point2[1] = self.__cut_off(end_point2[1])
+        points_disp.append(tuple(end_point2))
+
+        #空間変換後に手前に引く点
+        end_point1 = list(copy.copy(points_disp[-1]))
+        end_point1[0] += vec3_standard[0] * z0 * self.config.THICKNESS_FACTOR * 0.1 * 0.5 * 4
+        end_point1[0] = self.__cut_off(end_point1[0])
+        end_point1[1] += vec3_standard[1] * z0 * self.config.THICKNESS_FACTOR * 0.1 * 0.5 * 4
+        end_point1[1] = self.__cut_off(end_point1[1])
+
+        points_disp.append(tuple(end_point2))
+        points_disp.append(tuple(end_point1))
+
         self.points_disp = points_disp
 
         points_world = [self.__convert(
@@ -26,42 +65,15 @@ class Stroke:
         self.points = [positions.RobotCoord(i[0], i[1], i[2], self.config.ROBOT_TIP_ROTATION[0],
                                             self.config.ROBOT_TIP_ROTATION[1], self.config.ROBOT_TIP_ROTATION[2], self.thickness) for i in points_world]
 
-        start_point = copy.copy(self.points[0])
-        vec = [self.points[1].y - self.points[0].y, self.points[1].z - self.points[0].z]
-        vec_size = math.sqrt(vec[0]**2 + vec[1]**2)
-        vec_standard = [i/vec_size for i in vec]
-        start_point.y -= vec_standard[0] * z0 * self.config.IMG_X * self.config.THICKNESS_FACTOR * 2
-        start_point.z -= vec_standard[1] * z0 * self.config.IMG_X * self.config.THICKNESS_FACTOR * 2
-        start_point.x = -460123
-        self.start_point = start_point
+        start_foreground = copy.copy(self.points[0])
+        #start_foreground.x = -460123
+        start_foreground.x = -480081
+        self.points[0] = start_foreground
 
-        start_point2 = copy.copy(self.points[0])
-        vec2 = [self.points[1].y - self.points[0].y, self.points[1].z - self.points[0].z]
-        vec2_size = math.sqrt(vec2[0]**2 + vec2[1]**2)
-        vec2_standard = [i/vec2_size for i in vec2]
-        start_point2.y -= vec2_standard[0] * z0 * self.config.IMG_X * self.config.THICKNESS_FACTOR
-        start_point2.z -= vec2_standard[1] * z0 * self.config.IMG_X * self.config.THICKNESS_FACTOR
-
-        '''
-        end_point = copy.copy(self.points[-1])
-        end_point.x = -460123
-        self.end_point = end_point
-        '''
-
-        end_point2 = copy.copy(self.points[-1])
-        vec3 = [self.points[-2].y - self.points[-1].y, self.points[-2].z - self.points[-1].z]
-        vec3_size = math.sqrt(vec3[0]**2 + vec3[1]**2)
-        vec3_standard = [i/vec3_size for i in vec3]
-        end_point2.y += vec3_standard[0] * z2 * self.config.IMG_X * self.config.THICKNESS_FACTOR
-        end_point2.z += vec3_standard[1] * z2 * self.config.IMG_X * self.config.THICKNESS_FACTOR
-
-        end_point = copy.copy(end_point2)
-        end_point.x = -460123
-
-        self.points.insert(0, start_point)
-        self.points.insert(1, start_point2)
-        self.points.append(end_point2)
-        self.points.append(end_point)
+        end_foreground = copy.copy(self.points[-1])
+        #end_foreground.x = -460123
+        end_foreground.x = -480081
+        self.points[-1] = end_foreground
 
     def __bezier(self, x0, y0, x1, y1, x2, y2, z0, z2, t):
         x1 = x0 + (x2 - x0) * x1
@@ -118,6 +130,18 @@ class Stroke:
 
     def get_thickness(self):
         return self.thickness
+
+    def __cut_off(self, x):
+        if x < 0:
+            return 0
+        elif x > 1:
+            return 1
+        else:
+            return x
+
+    def __vec_standardize(self, vec):
+        size = math.sqrt(sum([i**2 for i in vec]))
+        return  [i/size for i in vec]
 
 
 class StrokeColor:
