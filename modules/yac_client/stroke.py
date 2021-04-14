@@ -19,19 +19,24 @@ class Stroke:
                 x0, y0, x1, y1, x2, y2, z0, z2, t))
 
         start_point2 = list(copy.copy(points_disp[0]))
-        vec2  = [points_disp[1][0] - points_disp[0][0], points_disp[1][1] - points_disp[0][1]]
-        vec2_standard  =self.__vec_standardize(vec2)
-        #0.1:キャンバスに対するストローク太さひ比率が0.1だから, 0.5:直径を半径に
-        start_point2[0] -= vec2_standard[0] * z0 * self.config.THICKNESS_FACTOR * 0.1 * 0.5
+        vec2 = [points_disp[1][0] - points_disp[0][0],
+                points_disp[1][1] - points_disp[0][1]]
+        vec2_standard = self.__vec_standardize(vec2)
+        # 0.1:キャンバスに対するストローク太さひ比率が0.1だから, 0.5:直径を半径に
+        start_point2[0] -= vec2_standard[0] * z0 * \
+            self.config.THICKNESS_FACTOR * 0.1 * 0.5
         start_point2[0] = self.__cut_off(start_point2[0])
-        start_point2[1] -= vec2_standard[1] * z0 * self.config.THICKNESS_FACTOR * 0.1 * 0.5
+        start_point2[1] -= vec2_standard[1] * z0 * \
+            self.config.THICKNESS_FACTOR * 0.1 * 0.5
         start_point2[1] = self.__cut_off(start_point2[1])
 
-        #空間変換後に手前に引く点
+        # 空間変換後に手前に引く点
         start_point1 = list(copy.copy(points_disp[0]))
-        start_point1[0] -= vec2_standard[0] * z0 * self.config.THICKNESS_FACTOR * 0.1 * 0.5 * 3
+        start_point1[0] -= vec2_standard[0] * z0 * \
+            self.config.THICKNESS_FACTOR * 0.1 * 0.5 * 3
         start_point1[0] = self.__cut_off(start_point1[0])
-        start_point1[1] -= vec2_standard[1] * z0 * self.config.THICKNESS_FACTOR * 0.1 * 0.5 * 3
+        start_point1[1] -= vec2_standard[1] * z0 * \
+            self.config.THICKNESS_FACTOR * 0.1 * 0.5 * 3
         start_point1[1] = self.__cut_off(start_point1[1])
         start_point1[2] = start_point1[2] * -0.5
 
@@ -39,18 +44,23 @@ class Stroke:
         points_disp.insert(0, tuple(start_point1))
 
         end_point2 = list(copy.copy(points_disp[-1]))
-        vec3 = [points_disp[-1][0] - points_disp[-2][0], points_disp[-1][1] - points_disp[-2][1]]
+        vec3 = [points_disp[-1][0] - points_disp[-2][0],
+                points_disp[-1][1] - points_disp[-2][1]]
         vec3_standard = self.__vec_standardize(vec3)
-        end_point2[0] += vec3_standard[0] * z0 * self.config.THICKNESS_FACTOR * 0.1 * 0.5
+        end_point2[0] += vec3_standard[0] * z0 * \
+            self.config.THICKNESS_FACTOR * 0.1 * 0.5
         end_point2[0] = self.__cut_off(end_point2[0])
-        end_point2[1] += vec3_standard[1] * z0 * self.config.THICKNESS_FACTOR * 0.1 * 0.5
+        end_point2[1] += vec3_standard[1] * z0 * \
+            self.config.THICKNESS_FACTOR * 0.1 * 0.5
         end_point2[1] = self.__cut_off(end_point2[1])
 
-        #空間変換後に手前に引く点
+        # 空間変換後に手前に引く点
         end_point1 = list(copy.copy(points_disp[-1]))
-        end_point1[0] += vec3_standard[0] * z0 * self.config.THICKNESS_FACTOR * 0.1 * 0.5 * 4
+        end_point1[0] += vec3_standard[0] * z0 * \
+            self.config.THICKNESS_FACTOR * 0.1 * 0.5 * 4
         end_point1[0] = self.__cut_off(end_point1[0])
-        end_point1[1] += vec3_standard[1] * z0 * self.config.THICKNESS_FACTOR * 0.1 * 0.5 * 4
+        end_point1[1] += vec3_standard[1] * z0 * \
+            self.config.THICKNESS_FACTOR * 0.1 * 0.5 * 4
         end_point1[1] = self.__cut_off(end_point1[1])
 
         points_disp.append(tuple(end_point2))
@@ -81,7 +91,7 @@ class Stroke:
         x = ((1-t) * (1-t) * x0 + 2 * t * (1-t) * x1 + t * t * x2)
         y = ((1-t) * (1-t) * y0 + 2 * t * (1-t) * y1 + t * t * y2)
         z = ((1-t) * z0 + t * z2)
-        z = self.__thickness_to_press_regression(z)
+        z = self.__thickness_to_press_quadratic(z)
         return y, x, -z, 0
 
     def __convert(self, x, y, z):
@@ -94,22 +104,34 @@ class Stroke:
         #y_new = config.CANVAS_Y - (y / config.IMG_Y * config.CANVAS_Y) + config.CANVAS_MERGIN_BUTTON
 
         x_new = x * self.config.CANVAS_X - self.config.CANVAS_X / 2
-        y_new = self.config.CANVAS_Y - (y * self.config.CANVAS_Y) + self.config.CANVAS_MERGIN_BUTTON
+        y_new = self.config.CANVAS_Y - \
+            (y * self.config.CANVAS_Y) + self.config.CANVAS_MERGIN_BUTTON
         c = [z, x_new, y_new]
         #  押し付け量の考慮
 
         #new_easel_canvas_offset = [self.config.EASEL_CANVAS_OFFSET[0] - self.__thickness_to_press_regression(z), self.config.EASEL_CANVAS_OFFSET[1], self.config.EASEL_CANVAS_OFFSET[2]]
-        new_easel_canvas_offset = [self.config.EASEL_CANVAS_OFFSET[0], self.config.EASEL_CANVAS_OFFSET[1], self.config.EASEL_CANVAS_OFFSET[2]]
+        new_easel_canvas_offset = [self.config.EASEL_CANVAS_OFFSET[0],
+                                   self.config.EASEL_CANVAS_OFFSET[1], self.config.EASEL_CANVAS_OFFSET[2]]
 
         return [int(i*1000) for i in self.config.EASEL_BASE_OFFSET + np.dot(new_easel_canvas_offset, R) + np.dot(c, R)]
 
     def __thickness_to_press_regression(self, thickness_degree):
-        a = 0.981900452
-        b = 0.007692308
+        #a = 0.981900452
+        #b = 0.007692308
+        a = 1
+        b = 0
         max_press = 17
-        result = min(max_press, (thickness_degree * self.config.IMG_X / 10 - b) / a)
-        #線画OpenCVの結果より明らかに太いため調整している
-        return result * self.config.THICKNESS_FACTOR
+        result = min(max_press, (thickness_degree *
+                     self.config.IMG_X * self.config.THICKNESS_FACTOR / 10 - b) / a)
+        # 線画OpenCVの結果より明らかに太いため調整している
+        return result
+
+    def __thickness_to_press_quadratic(self, thickness_degree):
+        x = thickness_degree * self.config.IMG_X * self.config.THICKNESS_FACTOR / 10
+        y = 0.0262 * x**2 + 0.3542 * x + 0.0936
+        max_press = 17
+        result = min(max_press, y)
+        return result
 
     def __thickness_to_press_table_search(self, thickness_degree):
         z_step = []
@@ -143,7 +165,7 @@ class Stroke:
 
     def __vec_standardize(self, vec):
         size = math.sqrt(sum([i**2 for i in vec]))
-        return  [i/size for i in vec]
+        return [i/size for i in vec]
 
 
 class StrokeColor:
@@ -178,7 +200,7 @@ class StrokeColor:
         if k == 1:
             c = m = y = w = 0
             k = 1
-        else :
+        else:
             c = (1 - r - k)/(1-k)
             m = (1 - g - k)/(1-k)
             y = (1 - b - k)/(1-k)
@@ -194,8 +216,6 @@ class StrokeColor:
         w = 0
 
         return c, m, y, k, w
-
-
 
 
 class CoordConfig:
@@ -215,14 +235,14 @@ class CoordConfig:
         # mm
         # ROBOT_TIP_TO_PEN_TIP = 130 (実測値は105だったが130でうまく動いている、キャンバスの厚さもこの定数に含まれている？)
         #self.ROBOT_TIP_TO_PEN_TIP = 105
-        #減らすと近く
-        #紙一枚減らすと1減らす(大体)
+        # 減らすと近く
+        # 紙一枚減らすと1減らす(大体)
         #self.ROBOT_TIP_TO_PEN_TIP = 127
         self.ROBOT_TIP_TO_PEN_TIP = 143
 
         # mm
         # キャンバス厚さ
-        self.CANVAS_THICKNESS = 8
+        self.CANVAS_THICKNESS = 7
 
         self.ROBOT_TIP_ROTATION = [-1050000, 0, 900000]
         #ROBOT_TIP_ROTATION = [-1050000, 0, 900000]

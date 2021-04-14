@@ -18,7 +18,7 @@ if __name__ == "__main__":
 
     total = c + m + y + k + w
     c, m, y, k, w = [color_amount * sequence_count * i / total for i in [c, m, y, k, w]]
-    print(f'c:{math.ceil(c)} m:{math.ceil(m)} y:{math.ceil(y)} k:{math.ceil(k)} w:{math.ceil(w)}')
+    print(f'c:{math.ceil(c*10)/10} m:{math.ceil(m*10)/10} y:{math.ceil(y*10)/10} k:{math.ceil(k*10)/10} w:{math.ceil(w*10)/10}')
     print(f'c:{c} m:{m} y:{y} k:{k} w:{w}')
 
     water_rates = [3/4, 5/6, 3/4, 6/7, 3/4]

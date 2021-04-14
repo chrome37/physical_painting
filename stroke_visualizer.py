@@ -7,23 +7,36 @@ import sys
 
 def draw_disp(strokes):
     for stroke in strokes:
-        x = [i[0] for i in stroke.get_points_disp()]
-        y = [i[1] for i in stroke.get_points_disp()]
+        x = [i[0] for i in stroke.get_points_disp()[1:-2]]
+        y = [i[1] for i in stroke.get_points_disp()[1:-2]]
         plt.xlim(0, 1)
         plt.ylim(0, 1)
         color = stroke.get_color()
         r, g, b, a = color.get_rgba()
-        plt.plot(x, y, linewidth=stroke.thickness * 20, color=[r, g, b, a])
+        plt.plot(x, y, linewidth=stroke.thickness * 10, color=[r, g, b, a])
 
     plt.show()
+
+def draw_disp_with_press(strokes):
+    fig = plt.figure()
+    ax = Axes3D(fig)
+    for stroke in strokes:
+        x = [i[0] for i in stroke.get_points_disp()]
+        y = [i[1] for i in stroke.get_points_disp()]
+        z = [i[2] for i in stroke.get_points_disp()]
+        color = stroke.get_color()
+        r,g,b,a = color.get_rgba()
+        ax.plot(x, y, z, linewidth=stroke.thickness * 10, color=[r, g, b, a])
+    plt.show()
+
 
 def draw_world(strokes):
     fig = plt.figure()
     ax = Axes3D(fig)
     for stroke in strokes:
-        x = [i.get_list()[0] for i in stroke.get_points()][0:-1]
-        y = [i.get_list()[1] for i in stroke.get_points()][0:-1]
-        z = [i.get_list()[2] for i in stroke.get_points()][0:-1]
+        x = [i.get_list()[0] for i in stroke.get_points()]
+        y = [i.get_list()[1] for i in stroke.get_points()]
+        z = [i.get_list()[2] for i in stroke.get_points()]
         color = stroke.get_color()
         r,g,b,a = color.get_rgba()
         ax.scatter(x[0], y[0], z[0], marker="*", color=[r, g, b, a])
@@ -42,5 +55,7 @@ if __name__ == "__main__":
     print([v.get_list() for i, v in enumerate(strokes[0].get_points()) if i <= 5])
     if args[2] == "--disp":
         draw_disp(strokes)
+    elif args[2] == "--disp_3D":
+        draw_disp_with_press(strokes)
     elif args[2] == "--world":
         draw_world(strokes)
