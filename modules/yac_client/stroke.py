@@ -29,12 +29,13 @@ class Stroke:
 
         #空間変換後に手前に引く点
         start_point1 = list(copy.copy(points_disp[0]))
-        start_point1[0] -= vec2_standard[0] * z0 * self.config.THICKNESS_FACTOR * 0.1 * 0.5 * 4
+        start_point1[0] -= vec2_standard[0] * z0 * self.config.THICKNESS_FACTOR * 0.1 * 0.5 * 3
         start_point1[0] = self.__cut_off(start_point1[0])
-        start_point1[1] -= vec2_standard[1] * z0 * self.config.THICKNESS_FACTOR * 0.1 * 0.5 * 4
+        start_point1[1] -= vec2_standard[1] * z0 * self.config.THICKNESS_FACTOR * 0.1 * 0.5 * 3
         start_point1[1] = self.__cut_off(start_point1[1])
+        start_point1[2] = start_point1[2] * -0.5
 
-        points_disp.insert(0, tuple(start_point2))
+        #points_disp.insert(0, tuple(start_point2))
         points_disp.insert(0, tuple(start_point1))
 
         end_point2 = list(copy.copy(points_disp[-1]))
@@ -44,7 +45,6 @@ class Stroke:
         end_point2[0] = self.__cut_off(end_point2[0])
         end_point2[1] += vec3_standard[1] * z0 * self.config.THICKNESS_FACTOR * 0.1 * 0.5
         end_point2[1] = self.__cut_off(end_point2[1])
-        points_disp.append(tuple(end_point2))
 
         #空間変換後に手前に引く点
         end_point1 = list(copy.copy(points_disp[-1]))
@@ -65,10 +65,10 @@ class Stroke:
         self.points = [positions.RobotCoord(i[0], i[1], i[2], self.config.ROBOT_TIP_ROTATION[0],
                                             self.config.ROBOT_TIP_ROTATION[1], self.config.ROBOT_TIP_ROTATION[2], self.thickness) for i in points_world]
 
-        start_foreground = copy.copy(self.points[0])
+        #start_foreground = copy.copy(self.points[0])
         #start_foreground.x = -460123
-        start_foreground.x = -480081
-        self.points[0] = start_foreground
+        #start_foreground.x = -480081
+        #self.points[0] = start_foreground
 
         end_foreground = copy.copy(self.points[-1])
         #end_foreground.x = -460123
@@ -81,7 +81,8 @@ class Stroke:
         x = ((1-t) * (1-t) * x0 + 2 * t * (1-t) * x1 + t * t * x2)
         y = ((1-t) * (1-t) * y0 + 2 * t * (1-t) * y1 + t * t * y2)
         z = ((1-t) * z0 + t * z2)
-        return y, x, z, 0
+        z = self.__thickness_to_press_regression(z)
+        return y, x, -z, 0
 
     def __convert(self, x, y, z):
         R = np.array([
@@ -94,10 +95,11 @@ class Stroke:
 
         x_new = x * self.config.CANVAS_X - self.config.CANVAS_X / 2
         y_new = self.config.CANVAS_Y - (y * self.config.CANVAS_Y) + self.config.CANVAS_MERGIN_BUTTON
-        c = [0, x_new, y_new]
+        c = [z, x_new, y_new]
         #  押し付け量の考慮
 
-        new_easel_canvas_offset = [self.config.EASEL_CANVAS_OFFSET[0] - self.__thickness_to_press_regression(z), self.config.EASEL_CANVAS_OFFSET[1], self.config.EASEL_CANVAS_OFFSET[2]]
+        #new_easel_canvas_offset = [self.config.EASEL_CANVAS_OFFSET[0] - self.__thickness_to_press_regression(z), self.config.EASEL_CANVAS_OFFSET[1], self.config.EASEL_CANVAS_OFFSET[2]]
+        new_easel_canvas_offset = [self.config.EASEL_CANVAS_OFFSET[0], self.config.EASEL_CANVAS_OFFSET[1], self.config.EASEL_CANVAS_OFFSET[2]]
 
         return [int(i*1000) for i in self.config.EASEL_BASE_OFFSET + np.dot(new_easel_canvas_offset, R) + np.dot(c, R)]
 

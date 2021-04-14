@@ -21,14 +21,17 @@ def draw_world(strokes):
     fig = plt.figure()
     ax = Axes3D(fig)
     for stroke in strokes:
-        x = [i.get_list()[0] for i in stroke.get_points()][1:-1]
-        y = [i.get_list()[1] for i in stroke.get_points()][1:-1]
-        z = [i.get_list()[2] for i in stroke.get_points()][1:-1]
+        x = [i.get_list()[0] for i in stroke.get_points()][0:-1]
+        y = [i.get_list()[1] for i in stroke.get_points()][0:-1]
+        z = [i.get_list()[2] for i in stroke.get_points()][0:-1]
         color = stroke.get_color()
         r,g,b,a = color.get_rgba()
         ax.scatter(x[0], y[0], z[0], marker="*", color=[r, g, b, a])
-        ax.scatter(x[-1], y[-1], z[-1], marker="+", color=[r, g, b, a])
-        ax.plot(x, y, z, linewidth=1, color=[r, g, b, a])
+        #ax.scatter(x[-1], y[-1], z[-1], marker="+", color=[r, g, b, a])
+        ax.set_xlim(-600000, -400000)
+        ax.set_ylim(-100000, 100000)
+        ax.set_zlim(0, 200000)
+        ax.plot(x, y, z, linewidth=stroke.thickness * 10, color=[r, g, b, a])
         #ax.plot(x[1:-1], y[1:-1], z[1:-1], marker=".", color=[r, g, b, a])
 
     plt.show()
