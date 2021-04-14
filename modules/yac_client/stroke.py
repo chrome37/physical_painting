@@ -38,7 +38,7 @@ class Stroke:
         start_point1[1] -= vec2_standard[1] * z0 * \
             self.config.THICKNESS_FACTOR * 0.1 * 0.5 * 3
         start_point1[1] = self.__cut_off(start_point1[1])
-        start_point1[2] = start_point1[2] * -0.5
+        start_point1[2] = start_point1[2] * -2
 
         #points_disp.insert(0, tuple(start_point2))
         points_disp.insert(0, tuple(start_point1))
@@ -116,10 +116,9 @@ class Stroke:
         return [int(i*1000) for i in self.config.EASEL_BASE_OFFSET + np.dot(new_easel_canvas_offset, R) + np.dot(c, R)]
 
     def __thickness_to_press_regression(self, thickness_degree):
-        #a = 0.981900452
-        #b = 0.007692308
-        a = 1
-        b = 0
+        a = 0.981900452
+        b = 0.007692308
+
         max_press = 17
         result = min(max_press, (thickness_degree *
                      self.config.IMG_X * self.config.THICKNESS_FACTOR / 10 - b) / a)
