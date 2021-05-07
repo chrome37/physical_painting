@@ -237,7 +237,7 @@ class CoordConfig:
         # 減らすと近く
         # 紙一枚減らすと1減らす(大体)
         #self.ROBOT_TIP_TO_PEN_TIP = 127
-        self.ROBOT_TIP_TO_PEN_TIP = 143
+        self.ROBOT_TIP_TO_PEN_TIP = 142
 
         # mm
         # キャンバス厚さ

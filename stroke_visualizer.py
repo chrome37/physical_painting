@@ -13,7 +13,7 @@ def draw_disp(strokes):
         plt.ylim(0, 1)
         color = stroke.get_color()
         r, g, b, a = color.get_rgba()
-        plt.plot(x, y, linewidth=stroke.thickness * 10, color=[r, g, b, a])
+        plt.plot(x, y, linewidth=stroke.thickness * 15, color=[r, g, b, a])
 
     plt.show()
 
@@ -26,7 +26,7 @@ def draw_disp_with_press(strokes):
         z = [i[2] for i in stroke.get_points_disp()]
         color = stroke.get_color()
         r,g,b,a = color.get_rgba()
-        ax.plot(x, y, z, linewidth=stroke.thickness * 10, color=[r, g, b, a])
+        ax.plot(x, y, z, linewidth=stroke.thickness * 15, color=[r, g, b, a])
     plt.show()
 
 
@@ -34,12 +34,12 @@ def draw_world(strokes):
     fig = plt.figure()
     ax = Axes3D(fig)
     for stroke in strokes:
-        x = [i.get_list()[0] for i in stroke.get_points()]
-        y = [i.get_list()[1] for i in stroke.get_points()]
-        z = [i.get_list()[2] for i in stroke.get_points()]
+        x = [i.get_list()[0] for i in stroke.get_points()][2:-1]
+        y = [i.get_list()[1] for i in stroke.get_points()][2:-1]
+        z = [i.get_list()[2] for i in stroke.get_points()][2:-1]
         color = stroke.get_color()
         r,g,b,a = color.get_rgba()
-        ax.scatter(x[0], y[0], z[0], marker="*", color=[r, g, b, a])
+        #ax.scatter(x[0], y[0], z[0], marker="*", color=[r, g, b, a])
         #ax.scatter(x[-1], y[-1], z[-1], marker="+", color=[r, g, b, a])
         ax.set_xlim(-600000, -400000)
         ax.set_ylim(-100000, 100000)

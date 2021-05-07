@@ -13,7 +13,7 @@ if __name__ == "__main__":
     k = sum([i[3] for i in colors])
     w = sum([i[4] for i in colors])
 
-    color_amount = 1
+    color_amount = 1.25
     sequence_count = 10
 
     total = c + m + y + k + w
