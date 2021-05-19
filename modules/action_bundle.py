@@ -34,11 +34,11 @@ class ActionBundle:
         job_len = self.actions.set_job_len(5)
         self.actions.set_speed(self.config.get_brush_speed, job_len)
         self.actions.set_smoothness(self.config.get_brush_smoothness, job_len)
-        self.actions.go_to(0, self.positions.i00)
+        self.actions.go_to(0, self.positions.b00)
         self.actions.go_to(1, position_brush_above)
         self.actions.go_to(2, position_brush)
         self.actions.go_to(3, position_brush_above)
-        self.actions.go_to(4, self.positions.i00)
+        self.actions.go_to(4, self.positions.b00)
         self.actions.start_job()
         self.actions.wait_job(job_len)
 
@@ -104,7 +104,7 @@ class ActionBundle:
         self.actions.go_to(23, washer_edge_outside)
         self.actions.go_to(24, self.positions.w07)
 
-        self.actions.go_to(25, self.positions.i00)
+        self.actions.go_to(25, self.positions.b00)
         self.actions.start_job()
         self.actions.wait_job(job_len)
 
@@ -116,7 +116,7 @@ class ActionBundle:
         job_len = self.actions.set_job_len(3)
         self.actions.set_speed(self.config.put_brush_speed, job_len)
         self.actions.set_smoothness(self.config.put_brush_smoothness, job_len)
-        self.actions.go_to(0, self.positions.i00)
+        self.actions.go_to(0, self.positions.b00)
         self.actions.go_to(1, position_brush_above)
         self.actions.go_to(2, position_brush)
         self.actions.start_job()
@@ -131,7 +131,7 @@ class ActionBundle:
         self.actions.set_speed(self.config.put_brush_speed, job_len)
         self.actions.set_smoothness(self.config.put_brush_smoothness, job_len)
         self.actions.go_to(0, position_brush_above)
-        self.actions.go_to(1, self.positions.i00)
+        self.actions.go_to(1, self.positions.b00)
         self.actions.start_job()
         self.actions.wait_job(job_len)
 

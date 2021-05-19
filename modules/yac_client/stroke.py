@@ -86,7 +86,8 @@ class Stroke:
 
         end_foreground = copy.copy(self.points[-1])
         #end_foreground.x = -460123
-        end_foreground.x = -480081
+        #end_foreground.x = -480081
+        end_foreground.x = -605707
         self.points[-1] = end_foreground
 
     def __bezier(self, x0, y0, x1, y1, x2, y2, z0, z2, t):
@@ -131,7 +132,10 @@ class Stroke:
 
     def __thickness_to_press_quadratic(self, thickness_degree):
         x = thickness_degree * self.config.IMG_X * self.config.THICKNESS_FACTOR / 10
-        y = 0.0262 * x**2 + 0.3542 * x + 0.0936
+        a1 = 0.0111
+        a2 = 0.6216
+        a3 = -0.6665
+        y = a1 * x**2 + a2 * x + a3
         max_press = 17
         result = min(max_press, y)
         return result
@@ -259,11 +263,11 @@ class CoordConfig:
         # 減らすと近く
         # 紙一枚減らすと1減らす(大体)
         #self.ROBOT_TIP_TO_PEN_TIP = 127
-        self.ROBOT_TIP_TO_PEN_TIP = 142
+        self.ROBOT_TIP_TO_PEN_TIP = 142 - 135
 
         # mm
         # キャンバス厚さ
-        self.CANVAS_THICKNESS = 7
+        self.CANVAS_THICKNESS = 8
 
         self.ROBOT_TIP_ROTATION = [-1050000, 0, 900000]
         #ROBOT_TIP_ROTATION = [-1050000, 0, 900000]

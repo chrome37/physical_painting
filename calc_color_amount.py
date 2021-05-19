@@ -5,7 +5,7 @@ import math
 if __name__ == "__main__":
     args = sys.argv
     strokes = stroke_loader.load(args[1])
-
+    #13.8, 4
     colors = [i.get_color().get_cmykw() for i in strokes]
     c = sum([i[0] for i in colors])
     m = sum([i[1] for i in colors])

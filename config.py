@@ -13,8 +13,8 @@ serial_port_2 = "/dev/cu.usbmodem143101"
 baudrate_2 = 9600
 
 # sequence config
-stroke_file_path = "./stroke_test/violin/imgid4_stroke_out.csv"
-stroke_per_loop = 3
+stroke_file_path = "./stroke_test/brush_profile/lg_last.csv"
+stroke_per_loop = 5
 
 # brush selection config
 small_brush_boundary = 0
