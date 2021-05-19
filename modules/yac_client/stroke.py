@@ -4,6 +4,8 @@ from natsort import natsorted
 from . import positions
 import math
 import copy
+from PIL import ImageCms, Image
+import os
 
 
 class Stroke:
@@ -17,6 +19,8 @@ class Stroke:
         for t in t_array:
             points_disp.append(self.__bezier(
                 x0, y0, x1, y1, x2, y2, z0, z2, t))
+
+        points_disp = points_disp[2:]
 
         start_point2 = list(copy.copy(points_disp[0]))
         vec2 = [points_disp[1][0] - points_disp[0][0],
@@ -57,10 +61,10 @@ class Stroke:
         # 空間変換後に手前に引く点
         end_point1 = list(copy.copy(points_disp[-1]))
         end_point1[0] += vec3_standard[0] * z0 * \
-            self.config.THICKNESS_FACTOR * 0.1 * 0.5 * 4
+            self.config.THICKNESS_FACTOR * 0.1 * 0.5
         end_point1[0] = self.__cut_off(end_point1[0])
         end_point1[1] += vec3_standard[1] * z0 * \
-            self.config.THICKNESS_FACTOR * 0.1 * 0.5 * 4
+            self.config.THICKNESS_FACTOR * 0.1 * 0.5
         end_point1[1] = self.__cut_off(end_point1[1])
 
         points_disp.append(tuple(end_point2))
@@ -178,7 +182,7 @@ class StrokeColor:
         return (self.r, self.g, self.b, self.a)
 
     def get_rgba_256(self):
-        return (self.r * 255, self.g * 255, self.b*255, self.a)
+        return (int(self.r * 255), int(self.g * 255), int(self.b*255), self.a)
 
     def get_rgb(self):
         r = 1 - self.a + self.a * self.r
@@ -192,6 +196,7 @@ class StrokeColor:
         b = 1 - self.a + self.a * self.b
         return (r * 255, g * 255, b * 255)
 
+    '''
     def get_cmykw(self):
         r, g, b, a = self.get_rgba()
         k = min(1-r, 1-g, 1-b)
@@ -203,8 +208,25 @@ class StrokeColor:
             c = (1 - r - k)/(1-k)
             m = (1 - g - k)/(1-k)
             y = (1 - b - k)/(1-k)
-
+        print(c, m, y, k)
         return c, m, y, k, w
+    '''
+
+    def get_cmykw(self):
+        r, g, b, a = self.get_rgba_256()
+        srgb = ImageCms.createProfile("sRGB")
+        img = Image.new("RGB", (1, 1), color=(r, g, b))
+        img = ImageCms.profileToProfile(
+            img, srgb, '/Users/Takumi.Hongo@ibm.com/Desktop/repository/robotart/src/modules/yac_client/JapanColor2011Coated.icc',
+            renderingIntent=ImageCms.INTENT_RELATIVE_COLORIMETRIC,
+            outputMode="CMYK")
+        cmyk = np.array(img.getdata()) / 255
+        c, m, y, k = cmyk[0]
+        w = 0
+        return c, m, y, k, w
+        #0.41960784 0.01176471 0.98823529 0.00784314
+        #0.1801699489414489 0.0 0.8133276573307674 0.214823
+
 
     def get_cmy(self):
         r, g, b = self.get_rgb()
