@@ -5,6 +5,9 @@ import math
 if __name__ == "__main__":
     args = sys.argv
     strokes = stroke_loader.load(args[1])
+    print(strokes)
+    for i in range(len(strokes)):
+        print(i, strokes[i].get_color().get_cmykw())
     #13.8, 4
     colors = [i.get_color().get_cmykw() for i in strokes]
     c = sum([i[0] for i in colors])
@@ -14,7 +17,7 @@ if __name__ == "__main__":
     w = sum([i[4] for i in colors])
 
     color_amount = 1.25
-    sequence_count = 4
+    sequence_count = 5
 
     total = c + m + y + k + w
     c, m, y, k, w = [color_amount * sequence_count * i / total for i in [c, m, y, k, w]]

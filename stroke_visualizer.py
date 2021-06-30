@@ -14,7 +14,7 @@ def draw_disp(strokes):
         color = stroke.get_color()
         r, g, b, a = color.get_rgba()
 
-        plt.plot(x, y, linewidth=stroke.thickness * 15, color=[r, g, b, a])
+        plt.plot(x, y, linewidth=stroke.thickness * 15, color=[r, g, b, 0.5])
         #plt.scatter(x, y, color=[r, g, b, a])
 
     plt.show()

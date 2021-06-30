@@ -33,7 +33,7 @@ def make_action_bundle():
 if __name__ == "__main__":
 
     action_bundle, actions_template, arduino_client = make_action_bundle()
-    #arduino_client.pallet_feed()
-    #time.sleep(5)
-    action_bundle.initialize()
-    action_bundle.get_color()
+    arduino_client.pallet_receive()
+    #time.sleep(3)
+    #action_bundle.initialize()
+    #action_bundle.go_to_position(action_bundle.positions.b00)
