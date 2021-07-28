@@ -16,8 +16,8 @@ if __name__ == "__main__":
     k = sum([i[3] for i in colors])
     w = sum([i[4] for i in colors])
 
-    color_amount = 1.25
-    sequence_count = 5
+    color_amount = 1.5
+    sequence_count = 7
 
     total = c + m + y + k + w
     c, m, y, k, w = [color_amount * sequence_count * i / total for i in [c, m, y, k, w]]

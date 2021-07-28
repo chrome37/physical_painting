@@ -12,9 +12,10 @@ def draw_disp(strokes):
         plt.xlim(0, 1)
         plt.ylim(0, 1)
         color = stroke.get_color()
+        #print([i * 600 for i in color.get_cmykw()])
         r, g, b, a = color.get_rgba()
 
-        plt.plot(x, y, linewidth=stroke.thickness * 15, color=[r, g, b, 0.5])
+        plt.plot(x, y, linewidth=stroke.thickness * 15, color=[r, g, b, 0.7])
         #plt.scatter(x, y, color=[r, g, b, a])
 
     plt.show()
@@ -28,6 +29,7 @@ def draw_disp_with_press(strokes):
         z = [i[2] for i in stroke.get_points_disp()]
         color = stroke.get_color()
         r,g,b,a = color.get_rgba()
+        
         ax.plot(x, y, z, linewidth=stroke.thickness * 15, color=[r, g, b, a])
     plt.show()
 
@@ -54,7 +56,7 @@ def draw_world(strokes):
 if __name__ == "__main__":
     args = sys.argv
     strokes = stroke_loader.load(args[1])
-    print([v.get_list() for i, v in enumerate(strokes[0].get_points()) if i <= 5])
+    #print([v.get_list() for i, v in enumerate(strokes[0].get_points()) if i <= 5])
     if args[2] == "--disp":
         draw_disp(strokes)
     elif args[2] == "--disp_3D":

@@ -91,6 +91,8 @@ class Stroke:
         self.points[-1] = end_foreground
 
     def __bezier(self, x0, y0, x1, y1, x2, y2, z0, z2, t):
+        x2 = x0 + (x2 - x0) * 0.1
+        y2 = y0 + (y2 - y0) * 0.1
         x1 = x0 + (x2 - x0) * x1
         y1 = y0 + (y2 - y0) * y1
         x = ((1-t) * (1-t) * x0 + 2 * t * (1-t) * x1 + t * t * x2)
@@ -132,10 +134,11 @@ class Stroke:
 
     def __thickness_to_press_quadratic(self, thickness_degree):
         x = thickness_degree * self.config.IMG_X * self.config.THICKNESS_FACTOR / 10
-        a1 = 0.0111
-        a2 = 0.6216
-        a3 = -0.6665
+        a1 = 0.0283
+        a2 = 0.2191
+        a3 = -0.1456
         y = a1 * x**2 + a2 * x + a3
+        #y = x
         max_press = 17
         result = min(max_press, y)
         return result
@@ -226,8 +229,8 @@ class StrokeColor:
             outputMode="CMYK")
         cmyk = np.array(img.getdata()) / 255
         c, m, y, k = cmyk[0]
-        #w = min(r, g, b) / 255
-        w = (c + m + y + k) * 0.5
+        w = min(r, g, b) / 255
+        #w = (c + m + y + k) * 0.5
         return c, m, y, k, w
         #0.41960784 0.01176471 0.98823529 0.00784314
         #0.1801699489414489 0.0 0.8133276573307674 0.214823
@@ -264,13 +267,13 @@ class CoordConfig:
         # 減らすと近く
         # 紙一枚減らすと1減らす(大体)
         #self.ROBOT_TIP_TO_PEN_TIP = 127
-        self.ROBOT_TIP_TO_PEN_TIP = 142 - 135 + 4
+        self.ROBOT_TIP_TO_PEN_TIP = 142 - 135 + 5
 
         # mm
         # キャンバス厚さ
         self.CANVAS_THICKNESS = 8
 
-        self.ROBOT_TIP_ROTATION = [-1050000, 0, 900000]
+        self.ROBOT_TIP_ROTATION = [-1065000, 0, 900000]
         #ROBOT_TIP_ROTATION = [-1050000, 0, 900000]
 
         self.EASEL_BASE_OFFSET = np.array([-398, 0, -(360+510)])
