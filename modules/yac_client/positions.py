@@ -33,8 +33,10 @@ class DefinedPositions:
 
         self.p00 = PulseCoord(44687, -58797, 50941, 24, 89413, -17655, 0)
         self.p01 = PulseCoord(46577, -63244, 60374, 41, 74996, -18731, 0)
-        self.p01_right_up = PulseCoord(45277, -60666, 66078, 29, 72180, -17993, 0)
-        self.p01_left_up = PulseCoord(47665, -65614, 55129, 51, 77577, -19349, 0)
+        #self.p01_right_up = PulseCoord(45277, -60666, 66078, 29, 72180, -17993, 0)
+        self.p01_right_up = PulseCoord(45277, -60853, 66106, 29, 71942, -17993, 0)
+        #self.p01_left_up = PulseCoord(47665, -65614, 55129, 51, 77577, -19349, 0)
+        self.p01_left_up = PulseCoord(47665, -65824, 55168, 51, 77307, -19348, 0)
         self.p01_right = PulseCoord(45276, -61439, 66174, 29, 71219, -17993, 0)
         self.p01_left = PulseCoord(47665, -66362, 55238, 51, 76628, -19349, 0)
         self.p02 = PulseCoord(46577, -61391, 59839, 41, 77687, -18731, 0)

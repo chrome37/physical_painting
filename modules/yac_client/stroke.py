@@ -229,12 +229,11 @@ class StrokeColor:
             outputMode="CMYK")
         cmyk = np.array(img.getdata()) / 255
         c, m, y, k = cmyk[0]
-        w = min(r, g, b) / 255
+        w = (3 - (c + m + y)) / 2
+        print(c, m, y, k, w)
+        #w = min(r, g, b) / 255
         #w = (c + m + y + k) * 0.5
         return c, m, y, k, w
-        #0.41960784 0.01176471 0.98823529 0.00784314
-        #0.1801699489414489 0.0 0.8133276573307674 0.214823
-
 
     def get_cmy(self):
         r, g, b = self.get_rgb()

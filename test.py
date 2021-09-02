@@ -36,6 +36,4 @@ if __name__ == "__main__":
     arduino_client.pallet_feed()
     time.sleep(3)
     action_bundle.initialize()
-    action_bundle.get_color()
-    #action_bundle.initialize()
-    #action_bundle.go_to_position(action_bundle.positions.i01)
+    action_bundle.go_to_position(action_bundle.positions.i01)

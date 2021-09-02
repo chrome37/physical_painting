@@ -76,7 +76,7 @@ class ColorDeviceClient:
         print(self.connection.readline())
 
     def color_mix(self, c, m, y, k, w):
-        amount = 1.5
+        amount = 1.3
         step_per_volume = 600
         cmykw = [c, m, y, k, w]
         total = sum(cmykw)
