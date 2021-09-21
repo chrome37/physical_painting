@@ -14,7 +14,6 @@ def draw_disp(strokes):
         color = stroke.get_color()
         #print([i * 600 for i in color.get_cmykw()])
         r, g, b, a = color.get_rgba()
-
         plt.plot(x, y, linewidth=stroke.thickness * 15, color=[r, g, b, 0.7])
         #plt.scatter(x, y, color=[r, g, b, a])
 
@@ -29,7 +28,6 @@ def draw_disp_with_press(strokes):
         z = [i[2] for i in stroke.get_points_disp()]
         color = stroke.get_color()
         r,g,b,a = color.get_rgba()
-        
         ax.plot(x, y, z, linewidth=stroke.thickness * 15, color=[r, g, b, a])
     plt.show()
 

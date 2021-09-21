@@ -15,9 +15,11 @@ class Stroke:
         self.thickness = (z0 + z2) * 0.5
         point_num = 50
         t_array = np.arange(0, 1 + 1/point_num, 1/point_num)
+
         points_disp = []
         for t in t_array:
-            points_disp.append(self.__bezier(
+            ##!!!!!!!_bezier_basicはテスト用!!!!!!!!!!!######
+            points_disp.append(self.__bezier_basic(
                 x0, y0, x1, y1, x2, y2, z0, z2, t))
 
         points_disp = points_disp[2:]
@@ -91,10 +93,18 @@ class Stroke:
         self.points[-1] = end_foreground
 
     def __bezier(self, x0, y0, x1, y1, x2, y2, z0, z2, t):
-        x2 = x0 + (x2 - x0) * 0.1
-        y2 = y0 + (y2 - y0) * 0.1
+        stroke_len_ratio = 0.2
+        x2 = x0 + (x2 - x0) * stroke_len_ratio
+        y2 = y0 + (y2 - y0) * stroke_len_ratio
         x1 = x0 + (x2 - x0) * x1
         y1 = y0 + (y2 - y0) * y1
+        x = ((1-t) * (1-t) * x0 + 2 * t * (1-t) * x1 + t * t * x2)
+        y = ((1-t) * (1-t) * y0 + 2 * t * (1-t) * y1 + t * t * y2)
+        z = ((1-t) * z0 + t * z2)
+        z = self.__thickness_to_press_quadratic(z)
+        return y, x, -z, 0
+
+    def __bezier_basic(self, x0, y0, x1, y1, x2, y2, z0, z2, t):
         x = ((1-t) * (1-t) * x0 + 2 * t * (1-t) * x1 + t * t * x2)
         y = ((1-t) * (1-t) * y0 + 2 * t * (1-t) * y1 + t * t * y2)
         z = ((1-t) * z0 + t * z2)
@@ -229,8 +239,7 @@ class StrokeColor:
             outputMode="CMYK")
         cmyk = np.array(img.getdata()) / 255
         c, m, y, k = cmyk[0]
-        w = (3 - (c + m + y)) / 2
-        print(c, m, y, k, w)
+        w = (3 - (c + m + y)) / 4
         #w = min(r, g, b) / 255
         #w = (c + m + y + k) * 0.5
         return c, m, y, k, w
