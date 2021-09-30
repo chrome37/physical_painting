@@ -19,7 +19,7 @@ class Stroke:
         points_disp = []
         for t in t_array:
             ##!!!!!!!_bezier_basicはテスト用!!!!!!!!!!!######
-            points_disp.append(self.__bezier_basic(
+            points_disp.append(self.__bezier_basic_carvature_modified(
                 x0, y0, x1, y1, x2, y2, z0, z2, t))
 
         points_disp = points_disp[2:]
@@ -104,10 +104,53 @@ class Stroke:
         z = self.__thickness_to_press_quadratic(z)
         return y, x, -z, 0
 
+    def __bezier_carvature_modified(self, x0, y0, x1, y1, x2, y2, z0, z2, t):
+        stroke_len_ratio = 0.2
+        x2 = x0 + (x2 - x0) * stroke_len_ratio
+        y2 = y0 + (y2 - y0) * stroke_len_ratio
+        x1 = x0 + (x2 - x0) * x1
+        y1 = y0 + (y2 - y0) * y1
+        x = ((1-t) * (1-t) * x0 + 2 * t * (1-t) * x1 + t * t * x2)
+        y = ((1-t) * (1-t) * y0 + 2 * t * (1-t) * y1 + t * t * y2)
+        z = ((1-t) * z0 + t * z2)
+
+        center_relative = np.array([(x2 - x0)*0.5, (y2 - y1)*0.5])
+        target = np.array([x, y])
+        target_relative = target - np.array([x0, y0])
+        direction_vector = target_relative - center_relative
+        direction_vector /= np.linalg.norm(direction_vector)
+
+        expand_size = z * math.tanh(t / 10) * 0.5
+        new_target_relative = target_relative + direction_vector * expand_size
+        new_target = new_target_relative + np.array([x0, y0])
+        x = new_target[0]
+        y = new_target[1]
+        z = self.__thickness_to_press_quadratic(z)
+        return y, x, -z, 0
+
     def __bezier_basic(self, x0, y0, x1, y1, x2, y2, z0, z2, t):
         x = ((1-t) * (1-t) * x0 + 2 * t * (1-t) * x1 + t * t * x2)
         y = ((1-t) * (1-t) * y0 + 2 * t * (1-t) * y1 + t * t * y2)
         z = ((1-t) * z0 + t * z2)
+        z = self.__thickness_to_press_quadratic(z)
+        return y, x, -z, 0
+
+    def __bezier_basic_carvature_modified(self, x0, y0, x1, y1, x2, y2, z0, z2, t):
+        x = ((1-t) * (1-t) * x0 + 2 * t * (1-t) * x1 + t * t * x2)
+        y = ((1-t) * (1-t) * y0 + 2 * t * (1-t) * y1 + t * t * y2)
+        z = ((1-t) * z0 + t * z2)
+
+        center_relative = np.array([(x2 - x0)*0.5, (y2 - y1)*0.5])
+        target = np.array([x, y])
+        target_relative = target - np.array([x0, y0])
+        direction_vector = target_relative - center_relative
+        direction_vector /= np.linalg.norm(direction_vector)
+
+        expand_size = z * math.tanh(t / 10) * 0.5
+        new_target_relative = target_relative + direction_vector * expand_size
+        new_target = new_target_relative + np.array([x0, y0])
+        x = new_target[0]
+        y = new_target[1]
         z = self.__thickness_to_press_quadratic(z)
         return y, x, -z, 0
 

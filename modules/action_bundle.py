@@ -293,7 +293,7 @@ class ActionBundle:
 
 
     def make_color(self, color):
-        c, m, y, k, w = color.get_cmykw() #k, wが出ないのでいったんcmyで
+        c, m, y, k, w = color.get_cmykw()
         self.arduino.pallet_receive()
         time.sleep(self.config.pallet_move_wait_time)
         self.color_device.color_mix(c, m, y, k, w)
