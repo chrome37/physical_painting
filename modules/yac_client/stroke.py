@@ -120,7 +120,7 @@ class Stroke:
         direction_vector = target_relative - center_relative
         direction_vector /= np.linalg.norm(direction_vector)
 
-        expand_size = z * math.tanh(t / 10) * 0.5
+        expand_size = z * math.tanh(t / 10) * 0.5 * self.config.THICKNESS_FACTOR
         new_target_relative = target_relative + direction_vector * expand_size
         new_target = new_target_relative + np.array([x0, y0])
         x = new_target[0]
@@ -146,7 +146,7 @@ class Stroke:
         direction_vector = target_relative - center_relative
         direction_vector /= np.linalg.norm(direction_vector)
 
-        expand_size = z * math.tanh(t / 10) * 0.5
+        expand_size = z * math.tanh(t / 10) * 0.5 * self.config.THICKNESS_FACTOR
         new_target_relative = target_relative + direction_vector * expand_size
         new_target = new_target_relative + np.array([x0, y0])
         x = new_target[0]
