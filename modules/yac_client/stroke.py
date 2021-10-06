@@ -13,14 +13,18 @@ class Stroke:
         self.config = CoordConfig()
         self.color = StrokeColor(r, g, b, a)
         self.thickness = (z0 + z2) * 0.5
-        point_num = 50
+        point_num = 1000
         t_array = np.arange(0, 1 + 1/point_num, 1/point_num)
 
-        points_disp = []
+        points_disp_uneven = []
         for t in t_array:
             ##!!!!!!!_bezier_basicはテスト用!!!!!!!!!!!######
-            points_disp.append(self.__bezier_basic_carvature_modified(
+            points_disp_uneven.append(self.__bezier_basic(
                 x0, y0, x1, y1, x2, y2, z0, z2, t))
+
+        points_disp = self.__filter_points(points_disp_uneven)
+        points_disp = self.__curvature_modify(points_disp)
+        points_disp = self.__thickness_to_press_convert(points_disp)
 
         points_disp = points_disp[2:]
 
@@ -101,8 +105,7 @@ class Stroke:
         x = ((1-t) * (1-t) * x0 + 2 * t * (1-t) * x1 + t * t * x2)
         y = ((1-t) * (1-t) * y0 + 2 * t * (1-t) * y1 + t * t * y2)
         z = ((1-t) * z0 + t * z2)
-        z = self.__thickness_to_press_quadratic(z)
-        return y, x, -z, 0
+        return y, x, z, 0
 
     def __bezier_carvature_modified(self, x0, y0, x1, y1, x2, y2, z0, z2, t):
         stroke_len_ratio = 0.2
@@ -114,7 +117,7 @@ class Stroke:
         y = ((1-t) * (1-t) * y0 + 2 * t * (1-t) * y1 + t * t * y2)
         z = ((1-t) * z0 + t * z2)
 
-        center_relative = np.array([(x2 - x0)*0.5, (y2 - y1)*0.5])
+        center_relative = np.array([(x2 - x0)*0.5, (y2 - y0)*0.5])
         target = np.array([x, y])
         target_relative = target - np.array([x0, y0])
         direction_vector = target_relative - center_relative
@@ -125,15 +128,13 @@ class Stroke:
         new_target = new_target_relative + np.array([x0, y0])
         x = new_target[0]
         y = new_target[1]
-        z = self.__thickness_to_press_quadratic(z)
-        return y, x, -z, 0
+        return y, x, z, 0
 
     def __bezier_basic(self, x0, y0, x1, y1, x2, y2, z0, z2, t):
         x = ((1-t) * (1-t) * x0 + 2 * t * (1-t) * x1 + t * t * x2)
         y = ((1-t) * (1-t) * y0 + 2 * t * (1-t) * y1 + t * t * y2)
         z = ((1-t) * z0 + t * z2)
-        z = self.__thickness_to_press_quadratic(z)
-        return y, x, -z, 0
+        return y, x, z, 0
 
     def __bezier_basic_carvature_modified(self, x0, y0, x1, y1, x2, y2, z0, z2, t):
         x = ((1-t) * (1-t) * x0 + 2 * t * (1-t) * x1 + t * t * x2)
@@ -151,8 +152,62 @@ class Stroke:
         new_target = new_target_relative + np.array([x0, y0])
         x = new_target[0]
         y = new_target[1]
-        z = self.__thickness_to_press_quadratic(z)
-        return y, x, -z, 0
+        return y, x, z, 0
+
+    def __filter_points(self, points):
+        result = [points[0]]
+        total = 0
+        for i in range(1, len(points)-1):
+            curr = points[i]
+            prev = points[i-1]
+            d = math.sqrt((curr[0] - prev[0])**2 + (curr[1] - prev[1])**2)
+            total += d
+
+            if total >= 0.025:
+                total = 0
+                result.append(points[i])
+        result.append(points[-1])
+        print(len(result))
+        return result
+
+    def __curvature_modify(self, points):
+        start_point = points[0]
+        end_point = points[-1]
+        x0 = start_point[0]
+        y0 = start_point[1]
+        x2 = end_point[0]
+        y2 = end_point[1]
+
+        center_relative = np.array([(x2 - x0)*0.5, (y2 - y0)*0.5])
+
+        modified = []
+        for i, point in enumerate(points):
+            x = point[0]
+            y = point[1]
+            z = point[2]
+            t = i /len(points)
+            target = np.array([x, y])
+            target_relative = target - np.array([x0, y0])
+            direction_vector = target_relative - center_relative
+            direction_vector /= np.linalg.norm(direction_vector)
+
+            expand_size = z * math.tanh(t/10) * 0.5 * self.config.THICKNESS_FACTOR
+            new_target_relative = target_relative + direction_vector * expand_size
+            new_target = new_target_relative + np.array([x0, y0])
+            x = new_target[0]
+            y = new_target[1]
+            modified.append((x, y, z))
+        return modified
+
+    def __thickness_to_press_convert(self, points):
+        converted = []
+        for point in points:
+            x = point[0]
+            y = point[1]
+            press = self.__thickness_to_press_quadratic(points[2])
+            converted.append((x, y, -press))
+
+        return converted
 
     def __convert(self, x, y, z):
         R = np.array([
