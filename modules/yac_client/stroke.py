@@ -50,7 +50,7 @@ class Stroke:
         start_point1[1] = self.__cut_off(start_point1[1])
         start_point1[2] = start_point1[2] * -2
 
-        #points_disp.insert(0, tuple(start_point2))
+        points_disp.insert(0, tuple(start_point2))
         points_disp.insert(0, tuple(start_point1))
 
         end_point2 = list(copy.copy(points_disp[-1]))
@@ -107,52 +107,12 @@ class Stroke:
         z = ((1-t) * z0 + t * z2)
         return y, x, z, 0
 
-    def __bezier_carvature_modified(self, x0, y0, x1, y1, x2, y2, z0, z2, t):
-        stroke_len_ratio = 0.2
-        x2 = x0 + (x2 - x0) * stroke_len_ratio
-        y2 = y0 + (y2 - y0) * stroke_len_ratio
-        x1 = x0 + (x2 - x0) * x1
-        y1 = y0 + (y2 - y0) * y1
-        x = ((1-t) * (1-t) * x0 + 2 * t * (1-t) * x1 + t * t * x2)
-        y = ((1-t) * (1-t) * y0 + 2 * t * (1-t) * y1 + t * t * y2)
-        z = ((1-t) * z0 + t * z2)
-
-        center_relative = np.array([(x2 - x0)*0.5, (y2 - y0)*0.5])
-        target = np.array([x, y])
-        target_relative = target - np.array([x0, y0])
-        direction_vector = target_relative - center_relative
-        direction_vector /= np.linalg.norm(direction_vector)
-
-        expand_size = z * math.tanh(t / 10) * 0.5 * self.config.THICKNESS_FACTOR
-        new_target_relative = target_relative + direction_vector * expand_size
-        new_target = new_target_relative + np.array([x0, y0])
-        x = new_target[0]
-        y = new_target[1]
-        return y, x, z, 0
-
     def __bezier_basic(self, x0, y0, x1, y1, x2, y2, z0, z2, t):
         x = ((1-t) * (1-t) * x0 + 2 * t * (1-t) * x1 + t * t * x2)
         y = ((1-t) * (1-t) * y0 + 2 * t * (1-t) * y1 + t * t * y2)
         z = ((1-t) * z0 + t * z2)
         return y, x, z, 0
 
-    def __bezier_basic_carvature_modified(self, x0, y0, x1, y1, x2, y2, z0, z2, t):
-        x = ((1-t) * (1-t) * x0 + 2 * t * (1-t) * x1 + t * t * x2)
-        y = ((1-t) * (1-t) * y0 + 2 * t * (1-t) * y1 + t * t * y2)
-        z = ((1-t) * z0 + t * z2)
-
-        center_relative = np.array([(x2 - x0)*0.5, (y2 - y1)*0.5])
-        target = np.array([x, y])
-        target_relative = target - np.array([x0, y0])
-        direction_vector = target_relative - center_relative
-        direction_vector /= np.linalg.norm(direction_vector)
-
-        expand_size = z * math.tanh(t / 10) * 0.5 * self.config.THICKNESS_FACTOR
-        new_target_relative = target_relative + direction_vector * expand_size
-        new_target = new_target_relative + np.array([x0, y0])
-        x = new_target[0]
-        y = new_target[1]
-        return y, x, z, 0
 
     def __filter_points(self, points):
         result = [points[0]]
@@ -167,7 +127,6 @@ class Stroke:
                 total = 0
                 result.append(points[i])
         result.append(points[-1])
-        print(len(result))
         return result
 
     def __curvature_modify(self, points):
@@ -185,13 +144,11 @@ class Stroke:
             x = point[0]
             y = point[1]
             z = point[2]
-            t = i /len(points)
             target = np.array([x, y])
             target_relative = target - np.array([x0, y0])
             direction_vector = target_relative - center_relative
             direction_vector /= np.linalg.norm(direction_vector)
-
-            expand_size = z * math.tanh(t/10) * 0.5 * self.config.THICKNESS_FACTOR
+            expand_size = (z / 20) * math.tanh(i/5) * 0.4 * self.config.THICKNESS_FACTOR
             new_target_relative = target_relative + direction_vector * expand_size
             new_target = new_target_relative + np.array([x0, y0])
             x = new_target[0]
@@ -204,9 +161,8 @@ class Stroke:
         for point in points:
             x = point[0]
             y = point[1]
-            press = self.__thickness_to_press_quadratic(points[2])
+            press = self.__thickness_to_press_quadratic(point[2])
             converted.append((x, y, -press))
-
         return converted
 
     def __convert(self, x, y, z):

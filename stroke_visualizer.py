@@ -14,8 +14,8 @@ def draw_disp(strokes):
         color = stroke.get_color()
         #print([i * 600 for i in color.get_cmykw()])
         r, g, b, a = color.get_rgba()
-        #plt.plot(x, y, 0.1* 15, color=[r, g, b, 0.7])
-        plt.scatter(x, y, color=[r, g, b, a])
+        plt.plot(x, y, 0.1* 15, color=[r, g, b, 0.7])
+        #plt.scatter(x, y, color=[r, g, b, a])
 
     plt.show()
 
@@ -36,9 +36,9 @@ def draw_world(strokes):
     fig = plt.figure()
     ax = Axes3D(fig)
     for stroke in strokes:
-        x = [i.get_list()[0] for i in stroke.get_points()][2:-1]
-        y = [i.get_list()[1] for i in stroke.get_points()][2:-1]
-        z = [i.get_list()[2] for i in stroke.get_points()][2:-1]
+        x = [i.get_list()[0] for i in stroke.get_points()]
+        y = [i.get_list()[1] for i in stroke.get_points()]
+        z = [i.get_list()[2] for i in stroke.get_points()]
         color = stroke.get_color()
         r,g,b,a = color.get_rgba()
         #ax.scatter(x[0], y[0], z[0], marker="*", color=[r, g, b, a])
