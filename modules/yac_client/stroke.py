@@ -96,7 +96,7 @@ class Stroke:
         end_foreground.x = -605707
         self.points[-1] = end_foreground
 
-    def __bezier(self, x0, y0, x1, y1, x2, y2, z0, z2, t):
+    def __bezier_custom(self, x0, y0, x1, y1, x2, y2, z0, z2, t):
         stroke_len_ratio = 0.2
         x2 = x0 + (x2 - x0) * stroke_len_ratio
         y2 = y0 + (y2 - y0) * stroke_len_ratio
@@ -206,13 +206,6 @@ class Stroke:
         max_press = 17
         result = min(max_press, y)
         return result
-
-    def __thickness_to_press_table_search(self, thickness_degree):
-        z_step = []
-        y = []
-        for i in range(25):
-            z_step.append(i*0.04)
-        return thickness_degree * 12
 
     def get_points(self):
         return self.points
