@@ -19,14 +19,15 @@ class Stroke:
         points_disp_uneven = []
         for t in t_array:
             ##!!!!!!!_bezier_basicはテスト用!!!!!!!!!!!######
-            points_disp_uneven.append(self.__bezier_basic(
+            points_disp_uneven.append(self.__bezier_custom(
                 x0, y0, x1, y1, x2, y2, z0, z2, t))
 
         points_disp = self.__filter_points(points_disp_uneven)
         points_disp = self.__curvature_modify(points_disp)
         points_disp = self.__thickness_to_press_convert(points_disp)
 
-        points_disp = points_disp[2:]
+        #print(len(points_disp))
+        #points_disp = points_disp[2:]
 
         start_point2 = list(copy.copy(points_disp[0]))
         vec2 = [points_disp[1][0] - points_disp[0][0],
@@ -98,6 +99,7 @@ class Stroke:
 
     def __bezier_custom(self, x0, y0, x1, y1, x2, y2, z0, z2, t):
         stroke_len_ratio = 0.2
+        #stroke_len_ratio = 1
         x2 = x0 + (x2 - x0) * stroke_len_ratio
         y2 = y0 + (y2 - y0) * stroke_len_ratio
         x1 = x0 + (x2 - x0) * x1
@@ -112,7 +114,6 @@ class Stroke:
         y = ((1-t) * (1-t) * y0 + 2 * t * (1-t) * y1 + t * t * y2)
         z = ((1-t) * z0 + t * z2)
         return y, x, z, 0
-
 
     def __filter_points(self, points):
         result = [points[0]]
@@ -148,7 +149,8 @@ class Stroke:
             target_relative = target - np.array([x0, y0])
             direction_vector = target_relative - center_relative
             direction_vector /= np.linalg.norm(direction_vector)
-            expand_size = (z / 20) * math.tanh(i/5) * 0.4 * self.config.THICKNESS_FACTOR
+            expand_size = (z / 20) * math.tanh(i/5) * \
+                self.config.EXPAND_RATE * self.config.THICKNESS_FACTOR
             new_target_relative = target_relative + direction_vector * expand_size
             new_target = new_target_relative + np.array([x0, y0])
             x = new_target[0]
@@ -161,7 +163,7 @@ class Stroke:
         for point in points:
             x = point[0]
             y = point[1]
-            press = self.__thickness_to_press_quadratic(point[2])
+            press = self.__thickness_to_press_regression(point[2])
             converted.append((x, y, -press))
         return converted
 
@@ -187,12 +189,13 @@ class Stroke:
         return [int(i*1000) for i in self.config.EASEL_BASE_OFFSET + np.dot(new_easel_canvas_offset, R) + np.dot(c, R)]
 
     def __thickness_to_press_regression(self, thickness_degree):
-        a = 0.981900452
-        b = 0.007692308
+        x = thickness_degree * self.config.IMG_X * self.config.THICKNESS_FACTOR / 10
+        a = 0.8937
+        b = 0.1101
+        y = a*x + b
 
         max_press = 17
-        result = min(max_press, (thickness_degree *
-                     self.config.IMG_X * self.config.THICKNESS_FACTOR / 10 - b) / a)
+        result = min(max_press, y)
         # 線画OpenCVの結果より明らかに太いため調整している
         return result
 
@@ -202,7 +205,7 @@ class Stroke:
         a2 = 0.2191
         a3 = -0.1456
         y = a1 * x**2 + a2 * x + a3
-        #y = x
+        y = x
         max_press = 17
         result = min(max_press, y)
         return result
@@ -306,7 +309,7 @@ class CoordConfig:
     def __init__(self):
         # the angle of painter easel
         # -15 degree
-        self.EASEL_ANG = -1 * math.radians(16.5)
+        self.EASEL_ANG = -1 * math.radians(16.4)
 
         # mm
         #EASEL_LENGTH = 1000
@@ -341,3 +344,4 @@ class CoordConfig:
         self.CANVAS_Y = 200
 
         self.THICKNESS_FACTOR = 0.6
+        self.EXPAND_RATE = 0.5

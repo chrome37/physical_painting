@@ -12,7 +12,7 @@ if __name__ == "__main__":
     k = sum([i[3] for i in colors])
     w = sum([i[4] for i in colors])
 
-    color_amount =  1.3
+    color_amount =  1.5
     sequence_count = 6
 
     total = c + m + y + k + w
@@ -20,8 +20,9 @@ if __name__ == "__main__":
     #print(f'c:{c} m:{m} y:{y} k:{k} w:{w}')
 
     a = 0.3
-    b = [2, 4, 2, 2, 2]
-    base_amount = 0.5
+    #アクリル b = [2, 4, 2, 2, 2]
+    b = [1, 2, 1, 4, 1]
+    base_amount = 1
     colors = ["C", "M", "Y", "K", "W"]
     cmykw = [i+base_amount for i in cmykw]
     c,m,y,k,w = cmykw

@@ -76,14 +76,24 @@ class ColorDeviceClient:
         print(self.connection.readline())
 
     def color_mix(self, c, m, y, k, w):
-        amount = 1.3
-        step_per_volume = 600
+        amount = 1.5
+        step_per_volume = 500
         cmykw = [c, m, y, k, w]
         total = sum(cmykw)
         standardized = [i/total for i in cmykw]
-        steps = [str(int(i*amount*step_per_volume)) for i in standardized]
+        steps = [int(i*amount*step_per_volume) for i in standardized]
+        steps = [self.__round_up(i) for i in steps]
+        steps = [str(i) for i in steps]
         command_string = f"COLOR C{steps[0].zfill(4)} M{steps[1].zfill(4)} Y{steps[2].zfill(4)} K{steps[3].zfill(4)} W{steps[4].zfill(4)} F"
         self.__execute(command_string)
+
+    def __round_up(self, step):
+        if step < 25:
+            return 0
+        elif 25 <= step and step <= 100:
+            return 100
+        else :
+            return step
 
     def __del__(self):
         self.connection.close()

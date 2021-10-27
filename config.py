@@ -13,8 +13,8 @@ serial_port_2 = "/dev/cu.usbmodem143101"
 baudrate_2 = 9600
 
 # sequence config
-stroke_file_path = "./stroke_test/calibration/curve_test/curvature_bold.csv"
-stroke_per_loop = 3
+stroke_file_path = "./stroke_test/goldfish_6_10/imgid2_stroke_out.csv"
+stroke_per_loop = 10
 
 # brush selection config
 small_brush_boundary = 0
