@@ -100,7 +100,7 @@ class Stroke:
     def __bezier_custom(self, x0, y0, x1, y1, x2, y2, z0, z2, t):
         #stroke_len_ratio = 0.2
         #stroke_len_ratio = 1
-        stroke_len_ratio = 0.25
+        stroke_len_ratio = 1
         x2 = x0 + (x2 - x0) * stroke_len_ratio
         y2 = y0 + (y2 - y0) * stroke_len_ratio
         x1 = x0 + (x2 - x0) * x1
