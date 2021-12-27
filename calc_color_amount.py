@@ -19,9 +19,9 @@ if __name__ == "__main__":
     cmykw = [color_amount * sequence_count * i / total for i in [c, m, y, k, w]]
     #print(f'c:{c} m:{m} y:{y} k:{k} w:{w}')
 
-    a = 0.3
+    a = 0.5
     #アクリル b = [2, 4, 2, 2, 2]
-    b = [1, 2, 1, 4, 1]
+    b = [2, 3, 2, 5, 2]
     base_amount = 1
     colors = ["C", "M", "Y", "K", "W"]
     cmykw = [i+base_amount for i in cmykw]

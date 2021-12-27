@@ -34,5 +34,5 @@ if __name__ == "__main__":
 
     action_bundle, actions_template, arduino_client = make_action_bundle()
     action_bundle.initialize()
-    #arduino_client.pallet_receive()
-    #action_bundle.go_to_position(action_bundle.positions.i01)
+    arduino_client.pallet_receive()
+    action_bundle.go_to_position(action_bundle.positions.i01)

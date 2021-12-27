@@ -35,19 +35,19 @@ class Stroke:
         vec2_standard = self.__vec_standardize(vec2)
         # 0.1:キャンバスに対するストローク太さひ比率が0.1だから, 0.5:直径を半径に
         start_point2[0] -= vec2_standard[0] * z0 * \
-            self.config.THICKNESS_FACTOR * 0.1 * 0.5
+            self.config.THICKNESS_FACTOR * 0.1 * 0.5 * 0.1
         start_point2[0] = self.__cut_off(start_point2[0])
         start_point2[1] -= vec2_standard[1] * z0 * \
-            self.config.THICKNESS_FACTOR * 0.1 * 0.5
+            self.config.THICKNESS_FACTOR * 0.1 * 0.5 * 0.1
         start_point2[1] = self.__cut_off(start_point2[1])
 
         # 空間変換後に手前に引く点
         start_point1 = list(copy.copy(points_disp[0]))
         start_point1[0] -= vec2_standard[0] * z0 * \
-            self.config.THICKNESS_FACTOR * 0.1 * 0.5 * 3
+            self.config.THICKNESS_FACTOR * 0.1 * 0.5 * 2.1
         start_point1[0] = self.__cut_off(start_point1[0])
         start_point1[1] -= vec2_standard[1] * z0 * \
-            self.config.THICKNESS_FACTOR * 0.1 * 0.5 * 3
+            self.config.THICKNESS_FACTOR * 0.1 * 0.5 * 2.1
         start_point1[1] = self.__cut_off(start_point1[1])
         start_point1[2] = start_point1[2] * -2
 
@@ -59,19 +59,19 @@ class Stroke:
                 points_disp[-1][1] - points_disp[-2][1]]
         vec3_standard = self.__vec_standardize(vec3)
         end_point2[0] += vec3_standard[0] * z0 * \
-            self.config.THICKNESS_FACTOR * 0.1 * 0.5
+            self.config.THICKNESS_FACTOR * 0.1 * 0.5 * 2
         end_point2[0] = self.__cut_off(end_point2[0])
         end_point2[1] += vec3_standard[1] * z0 * \
-            self.config.THICKNESS_FACTOR * 0.1 * 0.5
+            self.config.THICKNESS_FACTOR * 0.1 * 0.5 * 2
         end_point2[1] = self.__cut_off(end_point2[1])
 
         # 空間変換後に手前に引く点
         end_point1 = list(copy.copy(points_disp[-1]))
         end_point1[0] += vec3_standard[0] * z0 * \
-            self.config.THICKNESS_FACTOR * 0.1 * 0.5
+            self.config.THICKNESS_FACTOR * 0.1 * 0.5 * 2
         end_point1[0] = self.__cut_off(end_point1[0])
         end_point1[1] += vec3_standard[1] * z0 * \
-            self.config.THICKNESS_FACTOR * 0.1 * 0.5
+            self.config.THICKNESS_FACTOR * 0.1 * 0.5 * 2
         end_point1[1] = self.__cut_off(end_point1[1])
 
         points_disp.append(tuple(end_point2))
@@ -98,8 +98,9 @@ class Stroke:
         self.points[-1] = end_foreground
 
     def __bezier_custom(self, x0, y0, x1, y1, x2, y2, z0, z2, t):
-        stroke_len_ratio = 0.2
+        #stroke_len_ratio = 0.2
         #stroke_len_ratio = 1
+        stroke_len_ratio = 0.25
         x2 = x0 + (x2 - x0) * stroke_len_ratio
         y2 = y0 + (y2 - y0) * stroke_len_ratio
         x1 = x0 + (x2 - x0) * x1
@@ -149,7 +150,7 @@ class Stroke:
             target_relative = target - np.array([x0, y0])
             direction_vector = target_relative - center_relative
             direction_vector /= np.linalg.norm(direction_vector)
-            expand_size = (z / 20) * math.tanh(i/5) * \
+            expand_size = (z / 20) * math.tanh((i/5) * (1)) * \
                 self.config.EXPAND_RATE * self.config.THICKNESS_FACTOR
             new_target_relative = target_relative + direction_vector * expand_size
             new_target = new_target_relative + np.array([x0, y0])
